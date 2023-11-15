@@ -1,0 +1,80 @@
+version: '3.9'
+name: fundy-prototype
+services:
+  builder:
+    container_name: builder
+    image: openjdk:17-ea-33-jdk-buster
+    stdin_open: true # `-i`
+    tty: true # `-t`
+    volumes:
+      - ./fundy-be/build.gradle:/build.gradle
+      - ./fundy-be/gradlew:/gradlew
+      - ./fundy-be/gradle:/gradle
+      - ./fundy-be/settings.gradle:/settings.gradle
+      - ./fundy-be/fundy-api:/fundy-api
+      - ./fundy-be/fundy-domain:/fundy-domain
+      - ./fundy-be/fundy-batch:/fundy-batch
+    command: "./gradlew clean build --parallel -x test"
+
+  mysql:
+    image: mysql:8.0.33-oracle
+    container_name: main-db
+    environment:
+      - MYSQL_ROOT_PASSWORD=root
+      - MYSQL_DATABASE=fundy
+      - TZ="Asia/Seoul"
+    ports:
+      - "3310:3306"
+    command:
+      - --character-set-server=utf8mb4
+      - --collation-server=utf8mb4_unicode_ci
+
+  nginx:
+    image: nginx
+    container_name: proxy_server
+    restart: always
+    volumes:
+      - ./conf/nginx.conf:/etc/nginx/nginx.conf
+    ports:
+      - "80:80"
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+
+  api:
+    container_name: api
+    image: openjdk:17-ea-33-jdk-buster
+    restart: always
+    volumes:
+      - ./fundy-be/fundy-api/build:/build
+    ports:
+      - "8080:8080"
+    command: "java -jar /build/libs/fundy-api-0.0.1-SNAPSHOT.jar"
+    # application.yml 파일의 내용을 무시하고 해당 환경 변수로 설정해서 실행합니다.
+    environment:
+      - SPRING_DATASOURCE_URL=jdbc:mysql://main-db:3306/fundy?useSSL=false&allowPublicKeyRetrieval=true&useUnicode=true&serverTimezone=Asia/Seoul
+      - SPRING_DATASOURCE_USERNAME=root
+      - SPRING_DATASOURCE_PASSWORD=root
+    depends_on:
+      nginx:
+        condition: service_started
+      mysql:
+        condition: service_started
+      builder:
+        condition: service_completed_successfully
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+
+  client:
+    container_name: client
+    build:
+      context: fundy-fe
+      dockerfile: Dockerfile
+    ports:
+      - "3000:3000"
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+    depends_on:
+      nginx:
+        condition: service_started
+      api:
+        condition: service_started

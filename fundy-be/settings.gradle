@@ -1,1 +1,5 @@
 rootProject.name = 'fundy-be'
+include 'fundy-batch'
+include 'fundy-api'
+include 'fundy-domain'
+

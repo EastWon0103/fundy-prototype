@@ -1,5 +1,6 @@
 *.idea
 *.iml
+/fundy-fe/build
 
 ### Java template
 # Compiled class file

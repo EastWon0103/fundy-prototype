@@ -1,13 +1,11 @@
-package com.example.fundybe;
+package com.example.fundybatch;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 @SpringBootApplication
-public class FundyBeApplication {
-
+public class FundyBatchApplication {
     public static void main(String[] args) {
-        SpringApplication.run(FundyBeApplication.class, args);
+        SpringApplication.run(FundyBatchApplication.class, args);
     }
-
 }
