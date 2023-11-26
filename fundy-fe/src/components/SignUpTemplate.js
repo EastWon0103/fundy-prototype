@@ -8,6 +8,7 @@ import {useNavigate} from 'react-router-dom';
 
 export default function SignUpTemplate() {
     const navigate = useNavigate();
+
     const [isEmailValid, setIsEmailValid] = useState(false);
     const [isPasswordValid, setIsPasswordValid] = useState(false);
     const [isNicknameValid, setIsNicknameValid] = useState(false);
@@ -56,6 +57,7 @@ export default function SignUpTemplate() {
         }
     };
 
+
     const handleSignUp = async (e) => {
         e.preventDefault();
     
@@ -89,6 +91,7 @@ export default function SignUpTemplate() {
         if (signUpSuccess) {
             navigate('/');
         }
+
     };
 
     return (
@@ -149,6 +152,7 @@ const Container = styled.div`
     box-sizing: border-box;
     display: flex;
     flex-direction: column;
+
 `;
 
 const Title = styled.h2`

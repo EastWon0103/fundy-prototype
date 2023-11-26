@@ -4,6 +4,7 @@ import styled from 'styled-components'
 import logo from '../images/logo.png'
 import logoText from '../images/logoText.png'
 import useScroll from '../hooks/useScroll'
+
 import useStore from '../store/store'
 
 export default function Navigator() {
@@ -32,6 +33,7 @@ export default function Navigator() {
         </StyledLink>
 
         <NavButtons>
+
             {isLoggedIn ? (
                 <UserGreeting show={show}>{'>'} {user.nickname} {'<'}</UserGreeting>
             ) : (
@@ -46,7 +48,6 @@ export default function Navigator() {
                 </>
 
             )}
-
 
             <ProjectButton show={show}>프로젝트 만들기</ProjectButton>
         </NavButtons>
@@ -132,3 +133,4 @@ const UserGreeting = styled.span`
     font-size: 20px;
     margin-right: 10px;
 `;
+

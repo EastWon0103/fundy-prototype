@@ -42,6 +42,7 @@ const useStore = create(set => ({
             set({ isLoggedIn: true, user: { nickname }});
 
             return true;
+
             
         } catch(error) {
             console.log('회원가입 실패', error.response ? error.response.data : error);
@@ -54,3 +55,4 @@ const useStore = create(set => ({
 }));
 
 export default useStore;
+
