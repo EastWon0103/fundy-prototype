@@ -4,8 +4,10 @@ import styled from 'styled-components'
 import isValidEmail from '../utils/isValidateEmail';
 import isValidPassword from '../utils/isValidatePassword';
 import isValidateNickname from '../utils/isValidateNickname';
+import {useNavigate} from 'react-router-dom';
 
 export default function SignUpTemplate() {
+    const navigate = useNavigate();
     const [isEmailValid, setIsEmailValid] = useState(false);
     const [isPasswordValid, setIsPasswordValid] = useState(false);
     const [isNicknameValid, setIsNicknameValid] = useState(false);
@@ -26,11 +28,13 @@ export default function SignUpTemplate() {
         setEmail(emailValue);
         setIsEmailValid(isValidEmail(emailValue));
     }
+
     const handlePasswordChange = (e) => {
         const passwordValue = e.target.value;
         setPassword(passwordValue);
         setIsPasswordValid(isValidPassword(passwordValue));
     }
+
     const handleNicknameChange = (e) => {
         const nicknameValue = e.target.value;
         setNickname(e.target.value);
@@ -51,7 +55,6 @@ export default function SignUpTemplate() {
             }
         }
     };
-
 
     const handleSignUp = async (e) => {
         e.preventDefault();
@@ -80,9 +83,12 @@ export default function SignUpTemplate() {
             alert('닉네임이 중복입니다.');
             return;
         }
-    
+
         // 모든 조건이 충족되면 회원가입 수행
-        await performSignUp();
+        const signUpSuccess = await performSignUp();
+        if (signUpSuccess) {
+            navigate('/');
+        }
     };
 
     return (
@@ -104,7 +110,7 @@ export default function SignUpTemplate() {
                     <NicknameContainer>
                         <NicknameInput
                             type='nickname'
-                            placeholder='2자 이상' 
+                            placeholder='2자 이상'  
                             value={nickname} 
                             onChange={handleNicknameChange} 
                             isValid={isNicknameValid} />
@@ -143,7 +149,6 @@ const Container = styled.div`
     box-sizing: border-box;
     display: flex;
     flex-direction: column;
-
 `;
 
 const Title = styled.h2`
@@ -160,7 +165,6 @@ const Label = styled.label`
     color: grey;
     margin-bottom: 10px;
     height: 69px;
-
 `;
 
 const Input = styled.input`

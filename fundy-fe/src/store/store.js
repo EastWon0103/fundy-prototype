@@ -6,6 +6,8 @@ const useStore = create(set => ({
     password: '',
     nickname: '',
     isValidNickname: undefined,
+    isLoggedIn: false,
+    user: {},
 
     setEmail: email => set(() => ({ email })),
     setPassword: password => set(() => ({ password })),
@@ -13,7 +15,7 @@ const useStore = create(set => ({
     setIsValidNickname: isValid => set(() => ({isValidNickname: isValid})),
 
     checkValidNickname: async () => {
- 
+
         const { nickname } = useStore.getState();
         try {
             const response = await checkNickname(nickname);
@@ -21,7 +23,7 @@ const useStore = create(set => ({
             const isValid = !isDuplicate;
             set({ isValidNickname: isValid });
             return isValid;
-            
+
         } catch (error) {
             console.log('닉네임 중복검사 중 오류 발생', error);
             set({ isValidNickname: false });
@@ -36,10 +38,16 @@ const useStore = create(set => ({
 
             console.log('회원가입 성공', response);
             setIsValidNickname(undefined);
+
+            set({ isLoggedIn: true, user: { nickname }});
+
+            return true;
             
         } catch(error) {
             console.log('회원가입 실패', error.response ? error.response.data : error);
             setIsValidNickname(undefined);
+
+            return false;
             
         }
     }
