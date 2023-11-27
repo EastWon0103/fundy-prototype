@@ -16,13 +16,18 @@ export default function SignUpTemplate() {
     const {
         email,
         password, 
-        nickname, 
+        nickname,
+        code, 
         setEmail, 
         setPassword, 
-        setNickname, 
+        setNickname,
+        setCode, 
         checkValidNickname, 
-        isValidNickname, 
-        performSignUp } = useStore();
+        isValidNickname,
+        isVerifyEmail, 
+        performSignUp,
+        performEmailAuthCode,
+        verifyEmailAuthCode } = useStore();
 
     const handleEmailChange = (e) => {
         const emailValue = e.target.value;
@@ -38,8 +43,13 @@ export default function SignUpTemplate() {
 
     const handleNicknameChange = (e) => {
         const nicknameValue = e.target.value;
-        setNickname(e.target.value);
+        setNickname(nicknameValue);
         setIsNicknameValid(isValidateNickname(nicknameValue));
+    }
+
+    const handleCodeChange = (e) => {
+        const codeValue = e.target.value;
+        setCode(codeValue);
     }
 
     const handleCheckNickname = async (e) => {
@@ -57,6 +67,27 @@ export default function SignUpTemplate() {
         }
     };
 
+    const handleEmailAuthCode = async (e) => {
+        e.preventDefault();
+        const isSuccess = await performEmailAuthCode();
+        if(isSuccess) {
+            alert('인증코드 발송 완료')
+        } else {
+            alert('인증코드 발송 실패')
+        }
+    }
+
+    const handleVerifyEmailAuthCode = async (e) => {
+        e.preventDefault();
+        const isSuccess = await verifyEmailAuthCode();
+        
+        if(isSuccess) {
+            alert('인증 완료')
+        } else {
+            alert('인증 실패')
+        }
+
+    }
 
     const handleSignUp = async (e) => {
         e.preventDefault();
@@ -74,6 +105,11 @@ export default function SignUpTemplate() {
 
         if (!isNicknameValid) {
             alert('유효하지 않은 닉네임입니다. 닉네임을 확인해주세요.');
+            return;
+        }
+
+        if (!isVerifyEmail) {
+            alert('이메일 인증이 완료되지 않았습니다. 이메일 인증을 수행해주세요.');
             return;
         }
     
@@ -100,12 +136,28 @@ export default function SignUpTemplate() {
           <form onSubmit={handleSignUp}>
             <Label>
                 * 이메일
-                <Input 
-                    type='email' 
-                    placeholder='ex) fundy@fundy.com' 
-                    value={email} 
-                    onChange={handleEmailChange} 
-                    isValid={isEmailValid}/>
+                <EmailContainer>
+                    <EmailInput 
+                        type='email' 
+                        placeholder='ex) fundy@fundy.com' 
+                        value={email} 
+                        onChange={handleEmailChange} 
+                        isValid={isEmailValid}/>
+                    <CheckButton onClick={handleEmailAuthCode}>인증코드발송</CheckButton>
+                </EmailContainer>
+            </Label>
+
+            <Label>
+                * 이메일 인증코드
+                <CodeContainer>
+                    <CodeInput 
+                        type='code' 
+                        placeholder='인증코드 작성' 
+                        value={code} 
+                        onChange={handleCodeChange}
+                        isValid={true}/> 
+                    <CheckButton onClick={handleVerifyEmailAuthCode}>인증하기</CheckButton>
+                </CodeContainer>
             </Label>
 
                 <Label>
@@ -222,3 +274,8 @@ const CheckButton = styled.button`
     height: 40px;
     color: #8b00ff;
 `;
+
+const EmailContainer = styled(NicknameContainer)``;
+const EmailInput = styled(NicknameInput)``;
+const CodeContainer = styled(NicknameContainer)``;
+const CodeInput = styled(NicknameInput)``;
