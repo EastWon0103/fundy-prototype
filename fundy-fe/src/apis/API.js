@@ -51,3 +51,65 @@ export const checkNickname = async (nickname) => {
         
     }
 }
+
+/**
+ * 로그인 요청 함수
+ * @param {string} email 
+ * @param {string} password 
+ * @returns 
+ */
+
+export const login = async (email, password) => {
+    try {
+        const response = await apiClient.post('/user/sign-in',{
+            email,
+            password
+        });
+        console.log('로그인 요청 성공', response.data);
+        return response.data;
+    } catch(error) {
+        console.log('로그인 요청 실패', error.response ? error.response.data : error)
+        throw error;
+    }
+}
+
+/**
+ * 이메일 인증 코드 발송 함수
+ * @param {string} email 
+ */
+
+export const getEmailAuthCode = async (email) => {
+    try {
+        const response = await apiClient.get('/email/auth-code', {
+            params: { email }
+        });
+        console.log('인증코드 발송 요청 성공', response.data);
+        return response.data;
+        
+    } catch(error) {
+        console.log('인증코드 발송 요청 실패', error.response ? error.response.data : error);
+        throw error;
+        
+    }
+}
+
+/**
+ * 이메일 인증 함수
+ * @param {string} email 
+ * @param {string} token 
+ * @param {string} code 
+ */
+
+export const verifyEmailAuthCode = async (email, token, code) => {
+    const requestBody = { email, token, code };
+    try {
+        const response = await apiClient.post('/email/verify', requestBody);
+        console.log('이메일 인증 요청 성공', response.data);
+        return response.data
+        
+    } catch(error) {
+        console.log('이메일 인증 요청 실패', error.response ? error.response.data : error)
+        throw error;
+        
+    }
+}
