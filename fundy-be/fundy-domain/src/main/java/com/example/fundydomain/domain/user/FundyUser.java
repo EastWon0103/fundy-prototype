@@ -14,6 +14,7 @@ import jakarta.persistence.Table;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import org.hibernate.annotations.DynamicInsert;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -21,6 +22,7 @@ import java.util.List;
 @Entity
 @Getter
 @NoArgsConstructor
+@DynamicInsert
 @Table(name = "FUNDY_USER")
 public class FundyUser {
     @Id
@@ -31,7 +33,7 @@ public class FundyUser {
     @Column(name = "EMAIL")
     private String email;
 
-    @Column(name = "PASSWORD", unique = true, nullable = false)
+    @Column(name = "PASSWORD", nullable = false)
     private String password;
 
     @Column(name = "NICKNAME",unique = true, nullable = false)
@@ -40,6 +42,9 @@ public class FundyUser {
     @Convert(converter = RoleAttributeConverter.class)
     @Column(name = "ROLE", nullable = false)
     private FundyRole role;
+
+    @Column(name = "PROFILE", nullable = false)
+    private String profile;
 
     @OneToMany(mappedBy = "owner")
     private List<Account> accounts = new ArrayList<>();
