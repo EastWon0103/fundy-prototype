@@ -1,12 +1,16 @@
 package com.example.fundyapi.service.user;
 
 import com.example.fundyapi.common.exception.DuplicateUserException;
+import com.example.fundyapi.common.exception.NoUserException;
 import com.example.fundyapi.common.utils.token.core.JwtUtil;
 import com.example.fundyapi.common.utils.token.user.UserTokenProvider;
 import com.example.fundyapi.service.user.dto.request.SignInServiceRequest;
 import com.example.fundyapi.service.user.dto.request.SignUpServiceRequest;
 import com.example.fundyapi.service.user.dto.response.DuplicateNicknameResponse;
 import com.example.fundyapi.service.user.dto.response.SignInResponse;
+import com.example.fundyapi.service.user.dto.response.UserAccountsResponse;
+import com.example.fundyapi.service.user.dto.response.UserInfoResponse;
+import com.example.fundydomain.domain.user.FundyUser;
 import com.example.fundydomain.logic.user.FundyUserLogic;
 import com.example.fundydomain.logic.user.dto.request.CreateUserLogicRequest;
 import lombok.RequiredArgsConstructor;
@@ -69,6 +73,24 @@ public class UserService implements UserUseCase {
         return SignInResponse.builder()
             .grantType(JwtUtil.GRANT_TYPE)
             .token(userTokenProvider.generateToken(authentication.getName(), authorities))
+            .build();
+    }
+
+    @Override
+    public UserInfoResponse getUserInfo(String email) {
+        FundyUser user = fundyUserLogic.findByEmail(email).orElseThrow(NoUserException::createBasic);
+
+        return UserInfoResponse.builder()
+            .id(user.getId())
+            .email(user.getEmail())
+            .nickname(user.getNickname())
+            .accounts(user.getAccounts()
+                .stream().map(account -> UserAccountsResponse.builder()
+                    .id(account.getId())
+                    .number(account.getNumber())
+                    .balance(account.getBalance())
+                    .build())
+                .collect(Collectors.toList()))
             .build();
     }
 }
