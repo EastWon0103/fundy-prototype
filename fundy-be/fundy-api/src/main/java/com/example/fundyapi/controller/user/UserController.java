@@ -9,14 +9,18 @@ import com.example.fundyapi.service.user.dto.request.SignInServiceRequest;
 import com.example.fundyapi.service.user.dto.request.SignUpServiceRequest;
 import com.example.fundyapi.service.user.dto.response.DuplicateNicknameResponse;
 import com.example.fundyapi.service.user.dto.response.SignInResponse;
+import com.example.fundyapi.service.user.dto.response.UserInfoResponse;
 import com.example.fundydomain.repository.project.ProjectRepository;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.security.core.userdetails.User;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -79,6 +83,19 @@ public class UserController {
                     .email(request.getEmail())
                     .password(request.getPassword())
                 .build()))
+            .build();
+    }
+
+    @Operation(summary = "유저 정보 조회", description = "로그인한 유저 정보 조회",
+        security = @SecurityRequirement(name = "bearerAuth"))
+    @ApiResponse(responseCode = "200", description = "성공", useReturnTypeSchema = true)
+    @ApiResponse(responseCode = "401", description = "토큰 문제",
+        content = @Content(schema = @Schema(implementation = GlobalExceptionResponse.class)))
+    @GetMapping("/info")
+    public final GlobalResponse<UserInfoResponse> getUserInfo(@AuthenticationPrincipal User user) {
+        return GlobalResponse.<UserInfoResponse>builder()
+            .message("유저 정보 조회")
+            .result(userUsecase.getUserInfo(user.getUsername()))
             .build();
     }
 }

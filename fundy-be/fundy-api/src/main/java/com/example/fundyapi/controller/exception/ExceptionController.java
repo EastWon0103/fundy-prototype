@@ -1,6 +1,7 @@
 package com.example.fundyapi.controller.exception;
 
 import com.example.fundyapi.common.exception.DuplicateUserException;
+import com.example.fundyapi.common.exception.NoUserException;
 import com.example.fundyapi.common.response.GlobalExceptionResponse;
 import io.swagger.v3.oas.annotations.Hidden;
 import lombok.extern.slf4j.Slf4j;
@@ -25,6 +26,12 @@ public class ExceptionController {
             .getFieldErrors()
             .stream().map((error)-> error.getDefaultMessage())
             .collect(Collectors.toList()));
+    }
+
+    @ExceptionHandler({NoUserException.class})
+    @ResponseStatus(HttpStatus.FORBIDDEN)
+    public final GlobalExceptionResponse handleNoUserException(final NoUserException e) {
+        return makeResponse(e.getMessage());
     }
 
     @ExceptionHandler({DuplicateUserException.class})
