@@ -18,5 +18,6 @@ public class UserInfoResponse {
     private long id;
     private String email;
     private String nickname;
+    private String profile;
     private List<UserAccountsResponse> accounts;
 }

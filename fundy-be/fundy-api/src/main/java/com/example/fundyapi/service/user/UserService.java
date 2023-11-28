@@ -84,6 +84,7 @@ public class UserService implements UserUseCase {
             .id(user.getId())
             .email(user.getEmail())
             .nickname(user.getNickname())
+            .profile(user.getProfile())
             .accounts(user.getAccounts()
                 .stream().map(account -> UserAccountsResponse.builder()
                     .id(account.getId())
