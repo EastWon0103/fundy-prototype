@@ -11,7 +11,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
 @Builder
-@Schema(name = "이메일 회원가입 Response")
+@Schema(name = "닉네임 중복 여부 Response")
 public class DuplicateNicknameResponse {
     @Schema(description = "대상 닉네임", example = "펀디123")
     private String nickname;

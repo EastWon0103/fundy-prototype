@@ -7,14 +7,16 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
+import java.util.List;
+
 @Builder
-@Getter
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
-@Schema(name = "로그인 토큰 Response")
-public class SignInResponse {
-    @Schema(description = "인증 타입", example = "Bearer")
-    private String grantType;
-    @Schema(description = "액세스 토큰", example = "adfadfaf123hjlafhdjkadfhjk")
-    private String token;
+@Getter
+@Schema(name = "유저 정보 Response")
+public class UserInfoResponse {
+    private long id;
+    private String email;
+    private String nickname;
+    private List<UserAccountsResponse> accounts;
 }
