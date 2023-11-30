@@ -1,6 +1,7 @@
 package com.example.fundyapi.controller.exception;
 
 import com.example.fundyapi.common.exception.DuplicateUserException;
+import com.example.fundyapi.common.exception.NoProjectException;
 import com.example.fundyapi.common.exception.NoUserException;
 import com.example.fundyapi.common.response.GlobalExceptionResponse;
 import io.swagger.v3.oas.annotations.Hidden;
@@ -31,6 +32,12 @@ public class ExceptionController {
     @ExceptionHandler({NoUserException.class})
     @ResponseStatus(HttpStatus.FORBIDDEN)
     public final GlobalExceptionResponse handleNoUserException(final NoUserException e) {
+        return makeResponse(e.getMessage());
+    }
+
+    @ExceptionHandler({NoProjectException.class})
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    public final GlobalExceptionResponse handleNoProjectException(final NoProjectException e) {
         return makeResponse(e.getMessage());
     }
 
