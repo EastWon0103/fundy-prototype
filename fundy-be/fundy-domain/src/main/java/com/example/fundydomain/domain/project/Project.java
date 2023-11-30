@@ -15,11 +15,13 @@ import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 import lombok.Builder;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import java.util.List;
 import java.util.stream.Collectors;
 
+@Getter
 @Entity
 @NoArgsConstructor
 @Table(name = "PROJECT")
@@ -34,6 +36,12 @@ public class Project {
 
     @Column(name = "CONTENT", nullable = false)
     private String content;
+
+    @Column(name = "DESCRIPTION", nullable = false)
+    private String description;
+
+    @Column(name = "thumbnail")
+    private String thumbnail;
 
     @ElementCollection(fetch = FetchType.LAZY)
     @CollectionTable(name = "GENRES")
@@ -50,9 +58,10 @@ public class Project {
     private FundyUser owner;
 
     @Builder
-    private Project(List<Genre> genres, String title, String content, ProjectPeriod projectPeriod, DevNoteUploadTerm devNoteUploadTerm, FundyUser owner) {
-        this.genres = genres.stream().map(Genre::getValue).collect(Collectors.toList());
+    private Project(String description, List<Genre> genres, String title, String content, ProjectPeriod projectPeriod, DevNoteUploadTerm devNoteUploadTerm, FundyUser owner) {
+        this.genres = genres.stream().map(Genre::getName).collect(Collectors.toList());
         this.title = title;
+        this.description = description;
         this.content = content;
         this.projectPeriod = projectPeriod;
         this.devNoteUploadTerm = devNoteUploadTerm;
@@ -60,6 +69,6 @@ public class Project {
     }
 
     public List<Genre> getGenres() {
-        return genres.stream().map(Genre::valueOf).collect(Collectors.toList());
+        return genres.stream().map(Genre::nameOf).collect(Collectors.toList());
     }
 }
