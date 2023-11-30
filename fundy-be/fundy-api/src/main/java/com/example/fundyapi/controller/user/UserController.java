@@ -10,7 +10,6 @@ import com.example.fundyapi.service.user.dto.request.SignUpServiceRequest;
 import com.example.fundyapi.service.user.dto.response.DuplicateNicknameResponse;
 import com.example.fundyapi.service.user.dto.response.SignInResponse;
 import com.example.fundyapi.service.user.dto.response.UserInfoResponse;
-import com.example.fundydomain.repository.project.ProjectRepository;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.media.Content;
@@ -30,12 +29,11 @@ import org.springframework.web.bind.annotation.RestController;
 
 
 @RestController
-@RequestMapping("/user")
+@RequestMapping("/users")
 @Tag(name = "User", description = "User API")
 @RequiredArgsConstructor
 public class UserController {
     private final UserUseCase userUsecase;
-    private final ProjectRepository projectRepository; // test
 
     @Operation(summary = "이메일 회원가입", description = "유저가 이메일로 회원가입")
     @ApiResponse(responseCode = "200", description = "성공", useReturnTypeSchema = true)
