@@ -35,7 +35,13 @@ export default function Navigator() {
         <NavButtons>
 
             {isLoggedIn ? (
-                <UserGreeting show={show}>{'>'} {user.nickname} {'<'}</UserGreeting>
+                <>
+                    <UserGreeting show={show}> {user.nickname} </UserGreeting>
+                    <Link to='/myPage'>
+                        <ProfileAvatar src={user.profile}/>
+                    </Link>
+                </>
+
             ) : (
                 <>
                     <Link to='/login'>
@@ -48,8 +54,12 @@ export default function Navigator() {
                 </>
 
             )}
+            <Link to='/mypage'>
+                <ProjectButton show={show}>
+                    프로젝트 만들기
+                </ProjectButton>
+            </Link>
 
-            <ProjectButton show={show}>프로젝트 만들기</ProjectButton>
         </NavButtons>
         
     </Container>
@@ -133,4 +143,12 @@ const UserGreeting = styled.span`
     font-size: 20px;
     margin-right: 10px;
 `;
+
+const ProfileAvatar = styled.img`
+    width: 40px;
+    height: 40px;
+    object-fit: contain;
+    border-radius: 50%;
+    margin-right: 10px;
+`
 
