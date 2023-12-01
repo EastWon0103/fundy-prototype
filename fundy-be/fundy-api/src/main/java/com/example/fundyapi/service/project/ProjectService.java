@@ -6,7 +6,9 @@ import com.example.fundyapi.service.project.dto.response.ProjectDetailResponse;
 import com.example.fundyapi.service.project.dto.response.ProjectPageResponse;
 import com.example.fundyapi.service.project.dto.response.ProjectSummaryResponse;
 import com.example.fundydomain.consists.enums.Genre;
+import com.example.fundydomain.domain.funding.FundingTransaction;
 import com.example.fundydomain.domain.project.Project;
+import com.example.fundydomain.logic.funding.FundingTransactionLogic;
 import com.example.fundydomain.logic.project.ProjectLogic;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -18,10 +20,13 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 public class ProjectService implements ProjectUseCase {
     private final ProjectLogic projectLogic;
+    private final FundingTransactionLogic fundingTransactionLogic;
 
     @Override
     public ProjectDetailResponse findById(long id) {
         Project project = projectLogic.findById(id).orElseThrow(NoProjectException::createBasic);
+        int total = fundingTransactionLogic.findByProject(project).stream().mapToInt(FundingTransaction::getAmount).sum();
+
         return ProjectDetailResponse.builder()
             .id(project.getId())
             .title(project.getTitle())
@@ -41,6 +46,7 @@ public class ProjectService implements ProjectUseCase {
                 .profile(project.getOwner().getProfile())
                 .nickname(project.getOwner().getNickname())
                 .build())
+            .totalFundingAmount(total)
             .build();
     }
 
