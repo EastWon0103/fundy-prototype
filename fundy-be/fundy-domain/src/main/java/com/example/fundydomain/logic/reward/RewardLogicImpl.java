@@ -8,6 +8,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 
 
 @Service
@@ -20,5 +21,10 @@ public class RewardLogicImpl implements RewardLogic {
     public List<Reward> findByProjectId(long projectId) {
         Project project = projectRepository.findById(projectId).orElseThrow();
         return rewardRepository.findByProject(project);
+    }
+
+    @Override
+    public Optional<Reward> findById(final long id) {
+        return rewardRepository.findById(id);
     }
 }
