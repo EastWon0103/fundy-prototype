@@ -25,4 +25,7 @@ public class ProjectDetailResponse {
     private String thumbnail;
     private List<String> genres;
     private OwnerResponse owner;
+    private int totalFundingAmount;
+    private int targetAmount;
+    private double percentage;
 }
