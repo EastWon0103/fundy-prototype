@@ -13,9 +13,10 @@ const useProject = (id) => {
             try {
                 const data = await getProjectsById(id);
                 if (isMounted) {
-                    setProject(data);
-                    updateProject(data);
+                    setProject(data.result);                    
+                    updateProject(data.result);
                     setIsLoading(false);
+                    
                 }
             } catch (error) {
                 console.log('프로젝트 가져오기 실패', error);
@@ -24,7 +25,7 @@ const useProject = (id) => {
             }
         };
         fetchProject();
-        return () =>{
+        return () => {
             isMounted = false;
         };
     }, [id, updateProject]);

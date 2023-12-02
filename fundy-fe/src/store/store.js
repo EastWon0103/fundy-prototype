@@ -12,6 +12,7 @@ const useStore = create(set => ({
     token: null,
     user: {},
     project: null,
+    rewards: null,
 
     setEmail: email => set(() => ({ email })),
     setPassword: password => set(() => ({ password })),
@@ -19,6 +20,7 @@ const useStore = create(set => ({
     setCode: code => set(() => ({ code })),
     setIsValidNickname: isValid => set(() => ({isValidNickname: isValid})),
     setProject: projectData => set({ project: projectData}),
+    setRewards: rewardsData => set({ rewards: rewardsData}),
 
 
     checkValidNickname: async () => {

@@ -166,3 +166,16 @@ export const getProjectsById = async (id) => {
     }
 
 }
+
+export const getRewards = async (id) => {
+    try {
+        const response = await apiClient.get(`/project/${id}/rewards`);
+        console.log('리워드 요청 성공', response.data);
+        return response.data
+        
+    } catch (error) {
+        console.log('리워드 요청 실패', error);
+        throw error;
+
+    }
+}
