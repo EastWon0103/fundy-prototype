@@ -57,8 +57,11 @@ public class Project {
     @JoinColumn(name = "OWNER_ID")
     private FundyUser owner;
 
+    @Column(name = "TARGET_AMOUNT")
+    private int targetAmount;
+
     @Builder
-    private Project(String description, List<Genre> genres, String title, String content, ProjectPeriod projectPeriod, DevNoteUploadTerm devNoteUploadTerm, FundyUser owner) {
+    private Project(String description, List<Genre> genres, String title, String content, ProjectPeriod projectPeriod, DevNoteUploadTerm devNoteUploadTerm, FundyUser owner, int targetAmount) {
         this.genres = genres.stream().map(Genre::getName).collect(Collectors.toList());
         this.title = title;
         this.description = description;
@@ -66,6 +69,7 @@ public class Project {
         this.projectPeriod = projectPeriod;
         this.devNoteUploadTerm = devNoteUploadTerm;
         this.owner = owner;
+        this.targetAmount = targetAmount;
     }
 
     public List<Genre> getGenres() {
