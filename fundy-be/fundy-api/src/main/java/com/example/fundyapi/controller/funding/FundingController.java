@@ -8,7 +8,7 @@ import com.example.fundyapi.service.funding.dto.request.FundingServiceRequest;
 import com.example.fundyapi.service.funding.dto.request.RefundingServiceRequest;
 import com.example.fundyapi.service.funding.dto.response.FundingResponse;
 import com.example.fundyapi.service.funding.dto.response.FundingSummaryResponse;
-v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
