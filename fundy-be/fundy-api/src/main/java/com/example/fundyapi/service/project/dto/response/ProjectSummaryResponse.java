@@ -14,4 +14,7 @@ public class ProjectSummaryResponse {
     private long id;
     private String thumbnail;
     private String title;
+    private int totalFundingAmount;
+    private int targetAmount;
+    private double percentage;
 }
