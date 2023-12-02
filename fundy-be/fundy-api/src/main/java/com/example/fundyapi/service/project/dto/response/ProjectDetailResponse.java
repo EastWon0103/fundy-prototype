@@ -26,4 +26,6 @@ public class ProjectDetailResponse {
     private List<String> genres;
     private OwnerResponse owner;
     private int totalFundingAmount;
+    private int targetAmount;
+    private double percentage;
 }

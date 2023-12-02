@@ -53,4 +53,8 @@ public class FundingTransaction {
         this.amount = amount;
         this.transactionDateTime = transactionDateTime;
     }
+
+    public void setRefund(boolean refund) {
+        isRefund = refund;
+    }
 }

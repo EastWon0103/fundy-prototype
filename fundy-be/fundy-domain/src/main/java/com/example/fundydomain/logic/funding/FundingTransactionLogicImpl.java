@@ -6,6 +6,7 @@ import com.example.fundydomain.domain.account.Account;
 import com.example.fundydomain.domain.funding.FundingTransaction;
 import com.example.fundydomain.domain.project.Project;
 import com.example.fundydomain.domain.reward.Reward;
+import com.example.fundydomain.domain.user.FundyUser;
 import com.example.fundydomain.logic.funding.dto.request.FundingLogicRequest;
 import com.example.fundydomain.repository.account.AccountRepository;
 import com.example.fundydomain.repository.funding.FundingTransactionRepository;
@@ -17,6 +18,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -63,8 +65,30 @@ public class FundingTransactionLogicImpl implements FundingTransactionLogic {
         return transactions;
     }
 
-    @Override
-    public void refunding(long transactionId) {
 
+    @Transactional
+    @Override
+    public void refunding(FundingTransaction fundingTransaction) {
+        fundingTransaction.setRefund(true);
+        Account account = fundingTransaction.getAccount();
+
+        account.setBalance(account.getBalance()+fundingTransaction.getAmount());
+        accountRepository.save(account);
+        fundingTransactionRepository.save(fundingTransaction);
+    }
+
+    @Override
+    public List<FundingTransaction> findByUser(FundyUser fundyUser) {
+        List<FundingTransaction> fundingTransactions = new ArrayList<>();
+        for(Account account : fundyUser.getAccounts()) {
+            fundingTransactions.addAll(fundingTransactionRepository.findByAccount(account));
+        }
+
+        return fundingTransactions;
+    }
+
+    @Override
+    public Optional<FundingTransaction> findById(long id) {
+        return fundingTransactionRepository.findById(id);
     }
 }
