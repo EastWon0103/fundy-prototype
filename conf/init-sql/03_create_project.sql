@@ -12,6 +12,7 @@ create table project
     devnote_upload_day   varchar(255) not null,
     title                varchar(255) not null,
     thumbnail                varchar(255) not null,
+    target_amount        int not null,
     deposit_account_id bigint not null,
     foreign key (deposit_account_id) references account (id),
     constraint FKmicjpnkjwo56ibo3d1430xl6f

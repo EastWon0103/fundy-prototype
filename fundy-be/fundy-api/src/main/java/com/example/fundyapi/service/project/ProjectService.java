@@ -25,7 +25,8 @@ public class ProjectService implements ProjectUseCase {
     @Override
     public ProjectDetailResponse findById(long id) {
         Project project = projectLogic.findById(id).orElseThrow(NoProjectException::createBasic);
-        int total = fundingTransactionLogic.findByProject(project).stream().mapToInt(FundingTransaction::getAmount).sum();
+        int total = getTotalFundingAmount(project);
+        double percentage = (double) total / (double) project.getTargetAmount() * 100;
 
         return ProjectDetailResponse.builder()
             .id(project.getId())
@@ -47,6 +48,8 @@ public class ProjectService implements ProjectUseCase {
                 .nickname(project.getOwner().getNickname())
                 .build())
             .totalFundingAmount(total)
+            .targetAmount(project.getTargetAmount())
+            .percentage(percentage)
             .build();
     }
 
@@ -58,13 +61,23 @@ public class ProjectService implements ProjectUseCase {
             .hasNext(projects.hasNext())
             .num(projects.getNumber())
             .size(projects.getSize())
-            .projectSummarys(projects.getContent().stream().map((project) ->
-                ProjectSummaryResponse.builder()
+            .projectSummarys(projects.getContent().stream().map((project) -> {
+                int totalFundingAmount = getTotalFundingAmount(project);
+                double percentage = (double) totalFundingAmount / (double) project.getTargetAmount() * 100;
+
+                return ProjectSummaryResponse.builder()
                     .id(project.getId())
                     .title(project.getTitle())
                     .thumbnail(project.getThumbnail())
-                    .build())
-                .collect(Collectors.toList()))
+                    .totalFundingAmount(totalFundingAmount)
+                    .targetAmount(project.getTargetAmount())
+                    .percentage(percentage)
+                    .build();
+            }).collect(Collectors.toList()))
             .build();
+    }
+
+    private int getTotalFundingAmount(Project project) {
+        return fundingTransactionLogic.findByProject(project).stream().mapToInt(FundingTransaction::getAmount).sum();
     }
 }
