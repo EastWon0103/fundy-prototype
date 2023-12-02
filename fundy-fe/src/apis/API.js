@@ -15,7 +15,7 @@ const apiClient = axios.create({
 
 export const signUp = async (email, password, nickname) => {
     try {
-        const response = await apiClient.post('/user/sign-up', {
+        const response = await apiClient.post('/users/sign-up', {
             email,
             password,
             nickname
@@ -38,7 +38,7 @@ export const signUp = async (email, password, nickname) => {
 
 export const checkNickname = async (nickname) => {
     try {
-        const response = await apiClient.get('/user/check-nickname', {
+        const response = await apiClient.get('/users/check-nickname', {
             params: { nickname }
         });
         console.log('체크 성공', response.data)
@@ -61,7 +61,7 @@ export const checkNickname = async (nickname) => {
 
 export const login = async (email, password) => {
     try {
-        const response = await apiClient.post('/user/sign-in',{
+        const response = await apiClient.post('/users/sign-in',{
             email,
             password
         });
@@ -112,4 +112,57 @@ export const verifyEmailAuthCode = async (email, token, code) => {
         throw error;
         
     }
+}
+
+/**
+ * 유저 정보 가져오기 함수
+ * @param {string} token 
+ * @returns 
+ */
+
+export const getUser = async (token) => {
+    try {
+        const response = await apiClient.get('users/info', {
+            headers: {
+            'Authorization': `Bearer ${token}`
+            }
+        });
+        console.log('유저 정보 요청 성공', response.data);
+        return response.data;
+        
+    } catch (error) {
+        console.log('유저 정보 요청 실패', error.response ? error.response.data : error);
+        throw error;
+        
+    }
+}
+
+/**
+ * 프로젝트 무한스크롤할 때 가져올 프로젝트들
+ * @param {int} pageNum 
+ * @param {int} pageSize 
+ */
+
+
+export const getProjects = async (pageNum, pageSize) => {
+
+
+}
+
+/**
+ * 프로젝트 가져오기
+ * @param {int} id 
+ */
+
+export const getProjectsById = async (id) => {
+    try {
+        const response = await apiClient.get(`/projects/${id}`);
+        console.log('프로젝트 요청 성공', response.data)
+        
+        return response.data
+    } catch (error) {
+        console.log('프로젝트 요청 실패', error);
+        throw error;
+    }
+
 }
