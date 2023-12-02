@@ -1,5 +1,5 @@
 import { create } from 'zustand';
-import { signUp, checkNickname, login, getEmailAuthCode, verifyEmailAuthCode } from '../apis/API';
+import { signUp, checkNickname, login, getEmailAuthCode, verifyEmailAuthCode, getUser, getProjectsById } from '../apis/API';
 
 const useStore = create(set => ({
     email: '',
@@ -9,14 +9,17 @@ const useStore = create(set => ({
     isLoggedIn: false,
     isVerifyEmail: false,
     code: '',
-    token: '',
+    token: null,
     user: {},
+    project: null,
 
     setEmail: email => set(() => ({ email })),
     setPassword: password => set(() => ({ password })),
     setNickname: nickname => set(() => ({ nickname })),
     setCode: code => set(() => ({ code })),
     setIsValidNickname: isValid => set(() => ({isValidNickname: isValid})),
+    setProject: projectData => set({ project: projectData}),
+
 
     checkValidNickname: async () => {
 
@@ -53,13 +56,13 @@ const useStore = create(set => ({
         const { email, token, code } = useStore.getState();
         try {
             const response = await verifyEmailAuthCode(email, token, code);
-            console.log('인증완료', response);
-            set({ isVerifyEmail: true });
-            return true;
+            const isSuccess = response.result.verify
+            set({ isVerifyEmail: isSuccess });
+            return isSuccess;
 
         } catch (error) {
             console.log('인증실패', error);
-            return false;
+            throw error;
         }
     },
 
@@ -92,6 +95,9 @@ const useStore = create(set => ({
             console.log('로그인 성공', response);
 
             set({ isLoggedIn: true });
+            set({ token: response.result.token });
+
+            await useStore.getState().getUserInfo();
             return true;
             
         } catch (error) {
@@ -100,6 +106,21 @@ const useStore = create(set => ({
             return false;
         }
     },
+
+    getUserInfo: async() => {
+        const {token} = useStore.getState();
+        try {
+            const response = await getUser(token);
+            console.log('유저정보 불러오기 성공', response);
+            set({ user: response.result });
+
+        } catch (error) {
+            console.log('유저정보 불러오기 실패', error)
+            
+        }
+    },
+
+    
 }));
 
 export default useStore;

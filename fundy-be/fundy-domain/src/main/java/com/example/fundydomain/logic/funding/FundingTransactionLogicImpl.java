@@ -65,7 +65,6 @@ public class FundingTransactionLogicImpl implements FundingTransactionLogic {
         return transactions;
     }
 
-
     @Transactional
     @Override
     public void refunding(FundingTransaction fundingTransaction) {

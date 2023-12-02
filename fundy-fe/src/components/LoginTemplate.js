@@ -5,7 +5,7 @@ import { useNavigate } from 'react-router';
 
 export default function LoginTemplate() {
 
-  const { email, password, setEmail, setPassword, performLogin } = useStore();
+  const { email, password, setEmail, setPassword, performLogin, getUserInfo } = useStore();
   const navigate = useNavigate();
   const handleEmailChange = (e) => {
     const emailValue = e.target.value;
@@ -22,11 +22,12 @@ export default function LoginTemplate() {
     const loginSuccess = await performLogin();
     if (loginSuccess) {
       navigate('/');
+      getUserInfo();
     } else {
       alert('로그인에 실패 했습니다. 이메일과 비밀번호를 확인해주세요.')
       return;
     }
-  } 
+  }
 
   return (
     <Container>
