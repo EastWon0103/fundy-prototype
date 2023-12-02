@@ -6,7 +6,9 @@ import com.example.fundyapi.service.project.dto.response.ProjectDetailResponse;
 import com.example.fundyapi.service.project.dto.response.ProjectPageResponse;
 import com.example.fundyapi.service.project.dto.response.ProjectSummaryResponse;
 import com.example.fundydomain.consists.enums.Genre;
+import com.example.fundydomain.domain.funding.FundingTransaction;
 import com.example.fundydomain.domain.project.Project;
+import com.example.fundydomain.logic.funding.FundingTransactionLogic;
 import com.example.fundydomain.logic.project.ProjectLogic;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -18,10 +20,14 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 public class ProjectService implements ProjectUseCase {
     private final ProjectLogic projectLogic;
+    private final FundingTransactionLogic fundingTransactionLogic;
 
     @Override
     public ProjectDetailResponse findById(long id) {
         Project project = projectLogic.findById(id).orElseThrow(NoProjectException::createBasic);
+        int total = getTotalFundingAmount(project);
+        double percentage = (double) total / (double) project.getTargetAmount() * 100;
+
         return ProjectDetailResponse.builder()
             .id(project.getId())
             .title(project.getTitle())
@@ -41,6 +47,9 @@ public class ProjectService implements ProjectUseCase {
                 .profile(project.getOwner().getProfile())
                 .nickname(project.getOwner().getNickname())
                 .build())
+            .totalFundingAmount(total)
+            .targetAmount(project.getTargetAmount())
+            .percentage(percentage)
             .build();
     }
 
@@ -52,13 +61,23 @@ public class ProjectService implements ProjectUseCase {
             .hasNext(projects.hasNext())
             .num(projects.getNumber())
             .size(projects.getSize())
-            .projectSummarys(projects.getContent().stream().map((project) ->
-                ProjectSummaryResponse.builder()
+            .projectSummarys(projects.getContent().stream().map((project) -> {
+                int totalFundingAmount = getTotalFundingAmount(project);
+                double percentage = (double) totalFundingAmount / (double) project.getTargetAmount() * 100;
+
+                return ProjectSummaryResponse.builder()
                     .id(project.getId())
                     .title(project.getTitle())
                     .thumbnail(project.getThumbnail())
-                    .build())
-                .collect(Collectors.toList()))
+                    .totalFundingAmount(totalFundingAmount)
+                    .targetAmount(project.getTargetAmount())
+                    .percentage(percentage)
+                    .build();
+            }).collect(Collectors.toList()))
             .build();
+    }
+
+    private int getTotalFundingAmount(Project project) {
+        return fundingTransactionLogic.findByProject(project).stream().mapToInt(FundingTransaction::getAmount).sum();
     }
 }
