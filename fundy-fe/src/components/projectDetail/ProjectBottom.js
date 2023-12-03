@@ -2,9 +2,25 @@ import React from 'react'
 import styled from 'styled-components'
 import formatCurrency from '../../utils/formatCurrency'
 import PdfContent from './PdfContent'
+import useStore from '../../store/store'
 
 
 export default function ProjectBottom({ project, rewards }) {
+
+    const performFunding = useStore(state => state.performFunding);
+
+    const handleFundingClick = async (rewardId, amount) => {
+        try {
+            const isSuccess = await performFunding(rewardId, amount);
+            if(isSuccess) {
+                alert('후원성공');
+                window.location.reload();
+            }
+        } catch (error) {
+            alert('잔고부족');
+        }
+    }
+
 
   return (
     <Container>
@@ -30,7 +46,7 @@ export default function ProjectBottom({ project, rewards }) {
                         <RewardItem>{reward.item}</RewardItem>
 
                     </RewardItemList>
-                    <FundingButton>{formatCurrency(reward.minimumPrice)}원 후원하기</FundingButton>
+                    <FundingButton onClick={() => handleFundingClick(reward.id, reward.minimumPrice)}>{formatCurrency(reward.minimumPrice)}원 후원하기</FundingButton>
                 </RewardCard>
             ))}
 
