@@ -16,26 +16,26 @@ export default function PdfContent({pdf}) {
   
     return (
         <PdfContainer>
-          <Document
+            <Document
             file={pdf}
             onLoadSuccess={onDocumentLoadSuccess}
-          >
+            >
             {Array.from(new Array(numPages), (el, index) => (
-              <StyledPage key={`page_${index + 1}`} pageNumber={index + 1} />
+                <StyledPage key={`page_${index + 1}`} pageNumber={index + 1} />
             ))}
-          </Document>
+            </Document>
         </PdfContainer>
-      );
+    );
 
-    }
+}
 
-    const PdfContainer = styled.div`
+const PdfContainer = styled.div`
     text-align: center;
     background-color: #f5f5f5;
     padding: 20px;
-  `;
-  
-  const StyledPage = styled(Page)`
+`;
+
+const StyledPage = styled(Page)`
     box-shadow: 0 2px 5px rgba(0, 0, 0, 0.3);
     margin-bottom: 20px;
-  `;
+`;
