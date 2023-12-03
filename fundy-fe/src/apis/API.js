@@ -191,6 +191,7 @@ export const getRewards = async (id) => {
  * @param {int} rewardId 
  * @param {int} accountId 
  * @param {int} amount 
+ * @param {string} token
  */
 
 export const funding = async (rewardId, accountId, amount, token) => {
@@ -208,6 +209,29 @@ export const funding = async (rewardId, accountId, amount, token) => {
         console.log('펀딩요청실패', error)
         throw error;
         
+    }
+
+}
+
+/**
+ * 펀딩 목록 가져오기
+ * @param {string} token 
+ * @returns 
+ */
+
+export const getFundings = async (token) => {
+    try {
+        const response = await apiClient.get('/fundings', {
+            headers: {
+                'Authorization': `Bearer ${token}`
+            }
+        })
+        console.log('펀딩 정보 요청 성공', response.data);
+        return response.data;
+        
+    } catch (error) {
+        console.log('펀딩 정보 요청 실패', error);
+        throw error;
     }
 
 }
