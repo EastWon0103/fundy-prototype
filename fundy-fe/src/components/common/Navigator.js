@@ -54,11 +54,10 @@ export default function Navigator() {
                 </>
 
             )}
-            <Link to='/mypage'>
-                <ProjectButton show={show}>
-                    프로젝트 만들기
-                </ProjectButton>
-            </Link>
+            <ProjectButton onshow={show}>
+                프로젝트 만들기
+            </ProjectButton>
+
 
         </NavButtons>
         

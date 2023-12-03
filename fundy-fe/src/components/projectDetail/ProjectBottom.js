@@ -8,11 +8,13 @@ import useStore from '../../store/store'
 export default function ProjectBottom({ project, rewards }) {
 
     const performFunding = useStore(state => state.performFunding);
+    // const getFundings = useStore(state => state.getFundings);
 
     const handleFundingClick = async (rewardId, amount) => {
         try {
             const isSuccess = await performFunding(rewardId, amount);
             if(isSuccess) {
+                // await getFundings();
                 alert('후원성공');
                 window.location.reload();
             }

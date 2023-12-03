@@ -34,6 +34,5 @@ export default function ProjectDetail() {
 };
 
 const Body = styled.body`
-
   background-color: #ebe9ea;
 `

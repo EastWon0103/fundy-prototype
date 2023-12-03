@@ -1,6 +1,6 @@
 import { create } from 'zustand';
 import { persist } from 'zustand/middleware';
-import { signUp, checkNickname, login, getEmailAuthCode, verifyEmailAuthCode, getUser, funding } from '../apis/API';
+import { signUp, checkNickname, login, getEmailAuthCode, verifyEmailAuthCode, getUser, funding, getFundings } from '../apis/API';
 
 const useStore = create(persist((set, get) => ({
     email: '',
@@ -14,6 +14,7 @@ const useStore = create(persist((set, get) => ({
     user: {},
     project: null,
     rewards: null,
+    fundings: null,
 
     setEmail: (email) => set(() => ({ email })),
     setPassword: (password) => set(() => ({ password })),
@@ -119,6 +120,18 @@ const useStore = create(persist((set, get) => ({
             console.log('잔고 부족');
             throw new Error('Insufficient balance');
             
+        }
+    },
+
+    getFundings: async () => {
+        const { token } = useStore.getState();
+        try {
+            const response = await getFundings(token);
+            console.log('펀딩 목록 요청 성공', response);
+            set({ fundings: response.result });
+            
+        } catch (error) {
+            console.log(error)
         }
     }
 
