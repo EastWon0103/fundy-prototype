@@ -204,6 +204,7 @@ const Container = styled.div`
     box-sizing: border-box;
     display: flex;
     flex-direction: column;
+    margin-top: 70px;
 
 `;
 
