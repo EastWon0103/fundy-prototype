@@ -3,73 +3,28 @@ import styled from 'styled-components'
 import useStore from '../store/store'
 import formatCurrency from '../utils/formatCurrency'
 import { Link as RouterLink } from 'react-router-dom'
+import { refunding } from '../apis/API'
 
 export default function Profile() {
 
-    const { user, fundings } = useStore()
-
-    // const user = {
-    //     "id": 6,
-    //     "email": "ryanbae94@naver.com",
-    //     "nickname": "qweqw123",
-    //     "profile": "https://fundy-bucket.s3.ap-northeast-2.amazonaws.com/default/profileImage.png",
-    //     "accounts": [
-    //       {
-    //         "id": 6,
-    //         "number": "33416-181-775",
-    //         "balance": 0
-    //       }
-    //     ]
-    //   }
-
-    // const fundings = [
-    //     {
-    //       "fundingTransactionId": 3,
-    //       "projectId": 1,
-    //       "rewardId": 3,
-    //       "accountId": 6,
-    //       "rewardTitle": "리워드3",
-    //       "rewardItem": "게임 C",
-    //       "rewardImage": "https://fundy-bucket.s3.ap-northeast-2.amazonaws.com/default/profileImage.png",
-    //       "amount": 100000,
-    //       "refund": false
-    //     },
-    //     {
-    //         "fundingTransactionId": 3,
-    //         "projectId": 1,
-    //         "rewardId": 3,
-    //         "accountId": 6,
-    //         "rewardTitle": "리워드3",
-    //         "rewardItem": "게임 C",
-    //         "rewardImage": "https://fundy-bucket.s3.ap-northeast-2.amazonaws.com/default/profileImage.png",
-    //         "amount": 100000,
-    //         "refund": false
-    //       },
-    //       {
-    //         "fundingTransactionId": 3,
-    //         "projectId": 1,
-    //         "rewardId": 3,
-    //         "accountId": 6,
-    //         "rewardTitle": "리워드3",
-    //         "rewardItem": "게임 C",
-    //         "rewardImage": "https://fundy-bucket.s3.ap-northeast-2.amazonaws.com/default/profileImage.png",
-    //         "amount": 100000,
-    //         "refund": false
-    //       },
-    //       {
-    //         "fundingTransactionId": 3,
-    //         "projectId": 1,
-    //         "rewardId": 3,
-    //         "accountId": 6,
-    //         "rewardTitle": "리워드3",
-    //         "rewardItem": "게임 C",
-    //         "rewardImage": "https://fundy-bucket.s3.ap-northeast-2.amazonaws.com/default/profileImage.png",
-    //         "amount": 100000,
-    //         "refund": false
-    //       }
-    //   ]
-
+    const { user, fundings, token, getUserInfo, getFundings } = useStore();
     const formattedBalance = formatCurrency(user.accounts[0].balance);
+
+    const handleRefund = async (token, transactionId, event) => {
+        event.preventDefault();
+        try {
+            const response = await(refunding(token, transactionId));
+            if (response) {
+                alert('환불요청완료');
+                await getUserInfo();
+                await getFundings();
+
+            }
+        } catch (error) {
+            alert(error);
+        }
+    }
+
 
     return (
 
@@ -95,7 +50,16 @@ export default function Profile() {
                             <RewardsCard>
                                 <RewardsImage src={reward.rewardImage}/>
                                 <RewardsTitle>{reward.rewardTitle}</RewardsTitle>
-                                <RewardsAmount>{formatCurrency(reward.amount)} 원</RewardsAmount>
+                                { 
+                                    reward.refund ? 
+                                    <RewardsAmount>환불완료</RewardsAmount> :
+                                    <> 
+                                        <RewardsAmount>{formatCurrency(reward.amount)} 원</RewardsAmount>
+                                        <RefundButton onClick={(event) => {
+                                            handleRefund(token, reward.fundingTransactionId, event)
+                                            }}>환불하기</RefundButton>
+                                    </>
+                                }
                             </RewardsCard>
                         </Link>
                     ))}
@@ -191,14 +155,12 @@ const RewardsSection = styled.div`
     display: flex;
     flex-direction: row;
     flex-wrap: wrap;
-    height: 800px;
     gap: 20px;
 `
 
 const RewardsCard = styled.div`
     display: flex;
     width: 344px;
-    height: 340px;
     flex-direction: column;
     margin-bottom: 20px;
 `
@@ -228,4 +190,20 @@ const RewardsAmount = styled.div`
 
 const Link = styled(RouterLink)`
     text-decoration: none;
+`
+
+const RefundButton = styled.button`
+    font-family: 'Orbit-Regular';
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-top: 10px;
+    width: 100px;
+    height: 38px;
+    color: #FFFFFF;
+    background-color: #675bfe;
+    border: #685bfe solid 1px;
+    font-weight: bold;
+    font-size: 16px;
+    cursor: pointer;
 `

@@ -235,3 +235,33 @@ export const getFundings = async (token) => {
     }
 
 }
+
+/**
+ * 환불하기 
+ * @param {string} token 
+ * @param {int} transactionId
+ * @returns 
+ */
+
+export const refunding = async (token, transactionId) => {
+
+    const config = {
+        headers: {
+            Authorization: `Bearer ${token}`
+        },
+        params: {
+            id: transactionId
+        }
+    }
+
+    try {
+        const response = await apiClient.patch('/refunding', null, config)
+        console.log('환불요청완료', response.data)
+        return true;
+         
+    } catch (error) {
+        console.log('환불요청실패', error)
+        throw error
+        
+    }
+}
