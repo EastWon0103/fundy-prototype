@@ -14,7 +14,6 @@ export default function ProjectBottom({ project, rewards }) {
         try {
             const isSuccess = await performFunding(rewardId, amount);
             if(isSuccess) {
-                // await getFundings();
                 alert('후원성공');
                 window.location.reload();
             }
