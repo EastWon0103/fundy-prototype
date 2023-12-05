@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 import styled from 'styled-components'
 import useStore from '../store/store'
 import formatCurrency from '../utils/formatCurrency'
@@ -8,8 +8,9 @@ import { refunding } from '../apis/API'
 export default function Profile() {
 
     const { user, fundings, token, getUserInfo, getFundings } = useStore();
+    const [len, setLen] = useState(0);
     const formattedBalance = formatCurrency(user.accounts[0].balance);
-
+    
     const handleRefund = async (token, transactionId, event) => {
         event.preventDefault();
         try {
@@ -25,6 +26,13 @@ export default function Profile() {
         }
     }
 
+    useEffect(() => {
+        if (fundings) {
+            const count = fundings.reduce((acc, reward) => acc + (reward.refund ? 0 : 1), 0);
+            setLen(count);
+        }
+    }, [fundings]);
+
 
     return (
 
@@ -36,7 +44,7 @@ export default function Profile() {
                 <Nickname>{ user.nickname }</Nickname>
                 <FundingSection>
                     <FundingAmount>
-                        {fundings === null ? 0 : fundings.length}개
+                        {fundings === null ? 0 : len}개
                     </FundingAmount>
                     <FundingDescriptioin>후원한 프로젝트</FundingDescriptioin>
                 </FundingSection>
