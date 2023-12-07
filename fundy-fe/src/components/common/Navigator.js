@@ -1,11 +1,11 @@
 import React from 'react'
 import {Link, useLocation} from 'react-router-dom'
 import styled from 'styled-components'
-import logo from '../images/logo.png'
-import logoText from '../images/logoText.png'
-import useScroll from '../hooks/useScroll'
+import logo from '../../images/logo.png'
+import logoText from '../../images/logoText.png'
+import useScroll from '../../hooks/useScroll'
 
-import useStore from '../store/store'
+import useStore from '../../store/store'
 
 export default function Navigator() {
 
@@ -54,11 +54,10 @@ export default function Navigator() {
                 </>
 
             )}
-            <Link to='/mypage'>
-                <ProjectButton show={show}>
-                    프로젝트 만들기
-                </ProjectButton>
-            </Link>
+            <ProjectButton onshow={show}>
+                프로젝트 만들기
+            </ProjectButton>
+
 
         </NavButtons>
         

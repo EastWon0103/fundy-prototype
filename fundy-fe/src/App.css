@@ -8,8 +8,9 @@
   font-style: normal;
 }
 body {
+  margin: 0;
+  padding-top: 50px;
   font-family: Orbit-Regular;
-  height: 250vw;
 }
 
 

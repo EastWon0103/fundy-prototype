@@ -29,6 +29,6 @@ return (
 const Container = styled.div`
     width: 100%;
     height: 486px;
-    margin-top: 70px;
+
     background-color: black;
 `
