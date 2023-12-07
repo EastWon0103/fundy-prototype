@@ -6,7 +6,6 @@ import com.example.fundyapi.service.project.dto.response.ProjectDetailResponse;
 import com.example.fundyapi.service.project.dto.response.ProjectPageResponse;
 import com.example.fundyapi.service.project.dto.response.ProjectSummaryResponse;
 import com.example.fundydomain.consists.enums.Genre;
-import com.example.fundydomain.domain.funding.FundingTransaction;
 import com.example.fundydomain.domain.project.Project;
 import com.example.fundydomain.logic.funding.FundingTransactionLogic;
 import com.example.fundydomain.logic.project.ProjectLogic;
@@ -78,6 +77,10 @@ public class ProjectService implements ProjectUseCase {
     }
 
     private int getTotalFundingAmount(Project project) {
-        return fundingTransactionLogic.findByProject(project).stream().mapToInt(FundingTransaction::getAmount).sum();
+        return fundingTransactionLogic.findByProject(project).stream().mapToInt((funding) -> {
+            if (funding.isRefund())
+                return 0;
+            return funding.getAmount();
+        }).sum();
     }
 }
