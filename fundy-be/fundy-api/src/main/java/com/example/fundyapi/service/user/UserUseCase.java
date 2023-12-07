@@ -10,5 +10,6 @@ public interface UserUseCase {
     DuplicateNicknameResponse checkDuplicateNickname(final String nickname);
     long signUp(final SignUpServiceRequest request);
     SignInResponse signIn(final SignInServiceRequest request);
-    UserInfoResponse getUserInfo(final String email);
+
+    UserInfoResponse getUserInfo(String username);
 }
