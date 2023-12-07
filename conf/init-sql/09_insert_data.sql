@@ -45,3 +45,14 @@ insert into funding_transaction (id, account_id, reward_id,
 values (1,4,1,
         "2023-11-20 09:00:00",
         55000);
+
+insert into devnote (id, project_id, title, content, thumbnail)
+values (1, 1, "첫 번째 개발노트",
+        "https://fundy-bucket.s3.ap-northeast-2.amazonaws.com/default/prototype/Term+Project+Analysis+and+Design.pdf",
+        "https://fundy-bucket.s3.ap-northeast-2.amazonaws.com/default/profileImage.png"),
+       (2, 1, "두 번째 개발노트",
+        "https://fundy-bucket.s3.ap-northeast-2.amazonaws.com/default/prototype/Term+Project+Analysis+and+Design.pdf",
+        "https://fundy-bucket.s3.ap-northeast-2.amazonaws.com/default/profileImage.png"),
+        (3, 1, "세 번째 개발노트",
+        "https://fundy-bucket.s3.ap-northeast-2.amazonaws.com/default/prototype/Term+Project+Analysis+and+Design.pdf",
+        "https://fundy-bucket.s3.ap-northeast-2.amazonaws.com/default/profileImage.png");
