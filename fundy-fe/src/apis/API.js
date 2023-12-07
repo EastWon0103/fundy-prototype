@@ -166,3 +166,102 @@ export const getProjectsById = async (id) => {
     }
 
 }
+
+/**
+ * 리워드 가져오기
+ * @param {int} id 
+ * @returns 
+ */
+
+export const getRewards = async (id) => {
+    try {
+        const response = await apiClient.get(`/project/${id}/rewards`);
+        console.log('리워드 요청 성공', response.data);
+        return response.data
+        
+    } catch (error) {
+        console.log('리워드 요청 실패', error);
+        throw error;
+
+    }
+}
+
+/**
+ * 후원하기
+ * @param {int} rewardId 
+ * @param {int} accountId 
+ * @param {int} amount 
+ * @param {string} token
+ */
+
+export const funding = async (rewardId, accountId, amount, token) => {
+    const requestBody = {rewardId, accountId, amount}
+    const config = {
+        headers: {
+            Authorization: `Bearer ${token}`,
+        },
+    }
+    try {
+        const response = await apiClient.post('/fundings', requestBody, config);
+        console.log('펀딩 요청 성공', response.data);
+        
+    } catch (error) {
+        console.log('펀딩요청실패', error)
+        throw error;
+        
+    }
+
+}
+
+/**
+ * 펀딩 목록 가져오기
+ * @param {string} token 
+ * @returns 
+ */
+
+export const getFundings = async (token) => {
+    try {
+        const response = await apiClient.get('/fundings', {
+            headers: {
+                'Authorization': `Bearer ${token}`
+            }
+        })
+        console.log('펀딩 정보 요청 성공', response.data);
+        return response.data;
+        
+    } catch (error) {
+        console.log('펀딩 정보 요청 실패', error);
+        throw error;
+    }
+
+}
+
+/**
+ * 환불하기 
+ * @param {string} token 
+ * @param {int} transactionId
+ * @returns 
+ */
+
+export const refunding = async (token, transactionId) => {
+
+    const config = {
+        headers: {
+            Authorization: `Bearer ${token}`
+        },
+        params: {
+            id: transactionId
+        }
+    }
+
+    try {
+        const response = await apiClient.patch('/refunding', null, config)
+        console.log('환불요청완료', response.data)
+        return true;
+         
+    } catch (error) {
+        console.log('환불요청실패', error)
+        throw error
+        
+    }
+}
