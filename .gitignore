@@ -2,6 +2,7 @@
 *.iml
 /fundy-fe/build
 /fundy-be/fundy-api/src/main/resources/application-email.yml
+/fundy-be/api-adapter/src/main/resources/application-email.yml
 
 ### Java template
 # Compiled class file
