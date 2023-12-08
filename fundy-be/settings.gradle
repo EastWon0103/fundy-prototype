@@ -3,4 +3,7 @@ include 'fundy-batch'
 include 'fundy-api'
 include 'fundy-domain'
 include 'fundy-core'
+include 'fundy-core:domain'
+include 'persistent-adapter'
+include 'api-adapter'
 

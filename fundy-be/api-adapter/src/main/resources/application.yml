@@ -1,0 +1,28 @@
+server:
+  servlet:
+    context-path: /api
+
+token:
+  email:
+    key: WfDkfjikjkz23l23hjkhjkdahfjkdhajkfdrpdlarhsmswjstjf12asdlek
+    duration: 5m
+  user:
+    access:
+      key: akldfjiojioj4203jfldajlvj9adj9f3904jkldjklvjklcjnv90e0923i
+      duration: 30d
+
+springdoc:
+  packages-to-scan: com.example.api
+  default-consumes-media-type: application/json;charset=UTF-8
+  default-produces-media-type: application/json;charset=UTF-8
+  swagger-ui:
+    path: /docs
+    disable-swagger-default-url: true
+    display-request-duration: true
+    operations-sorter: alpha
+
+spring:
+  profiles:
+    include:
+      - domain
+      - email
