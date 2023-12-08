@@ -1,0 +1,12 @@
+project(':persistent-adapter') {
+    bootJar{enabled = true}
+    jar {enabled = false}
+
+    dependencies {
+        implementation project(":fundy-core")
+        api 'org.springframework.boot:spring-boot-starter-data-jpa'
+        api 'org.springframework.boot:spring-boot-starter-jdbc'
+
+        runtimeOnly 'com.mysql:mysql-connector-j'
+    }
+}
