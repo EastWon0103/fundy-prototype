@@ -53,7 +53,7 @@ export default function ProjectTop({project}) {
             <Percentage>{formattedPercentage}{'%'} 달성</Percentage>
           </TotalFundingPrice>
         </GoalPriceSection>
-        <FundingButton>프로젝트 후원하기</FundingButton>
+        {/* <FundingButton>프로젝트 후원하기</FundingButton> */}
       </DetailSection>
     </Container>
   )
