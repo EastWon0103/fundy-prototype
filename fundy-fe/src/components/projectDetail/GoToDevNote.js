@@ -1,10 +1,13 @@
 import React from 'react'
+import { Link as RouterLink } from 'react-router-dom'
 import styled from 'styled-components'
 
-export default function GoToDevNote() {
+export default function GoToDevNote({projectId}) {
   return (
     <Container>
+      <Link to={`/project/${projectId}/devnotes`} >
         <Section>{'>'} 개발노트 확인 하기 {'<'}</Section>
+      </Link>
     </Container>
   )
 }
@@ -26,4 +29,8 @@ const Section = styled.button`
     text-align: center;
     font-size: 24px;
     cursor: pointer;
+`
+
+const Link = styled(RouterLink)`
+  text-decoration: none;
 `

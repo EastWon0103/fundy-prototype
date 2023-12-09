@@ -26,7 +26,7 @@ export default function ProjectBottom({ project, rewards }) {
   return (
     <Container>
         <ProjectContent>
-            <PdfContent pdf={project.content} />
+            <PdfContent pdf={project.content} scale={1} width={790} />
         </ProjectContent>
         <RewardBox>
             {rewards.map((reward) => (
