@@ -6,6 +6,7 @@ import Main from './pages/Main';
 import Navigator from './components/common/Navigator';
 import MyPage from './pages/MyPage';
 import ProjectDetail from './pages/ProjectDetail';
+import DevNotes from './pages/DevNotes';
 
 function App() {
   return (
@@ -18,6 +19,7 @@ function App() {
           <Route path='/signup' element={<SignUp />} />
           <Route path='/mypage' element={<MyPage />} />
           <Route path='/project/:id' element={<ProjectDetail />} />
+          <Route path='/project/:id/devnotes' element={<DevNotes />} />
         </Routes>
 
       </div>

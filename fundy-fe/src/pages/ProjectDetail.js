@@ -23,7 +23,7 @@ export default function ProjectDetail() {
         <Body>
   
           <ProjectDescription project={project} />
-          <GoToDevNote />
+          <GoToDevNote projectId={id}/>
           <ProjectBottom rewards={rewards} project={project}/>
   
         </Body>
