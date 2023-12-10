@@ -48,7 +48,7 @@ export default function ProjectsRow() {
   return (
     <Container>
         <TitleBox>
-            <Title>🔥 신규 프로젝트</Title>
+            <Title>신규 프로젝트</Title>
         </TitleBox>
         <InfiniteScroll
             dataLength={projects.length}
@@ -96,27 +96,27 @@ const Container = styled.div`
     text-align: left;
     display: flex;
     flex-direction: column;
-    padding: 10px 200px;
 `
 
 const TitleBox = styled.div`
     display: flex;
     align-items: center;
+    margin: 0 auto;
     height: 80px;
+    width: 1320px;
 `
 
 const Title = styled.span`
-    margin-left: 20px;
     font-weight: bold;
     font-size: 24px;
 `
 
 const ProjectSection = styled.div`
     display: flex;
-    flex-direction: row;
-    margin: 0 0 0 20px;
+    margin: 0 auto;
     flex-wrap: wrap;
     gap: 40px;
+    width: 1320px;
 `
 
 const ProjectCard = styled.div`
