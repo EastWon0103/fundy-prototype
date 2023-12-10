@@ -1,6 +1,6 @@
 import { create } from 'zustand';
 import { persist } from 'zustand/middleware';
-import { signUp, checkNickname, login, getEmailAuthCode, verifyEmailAuthCode, getUser, funding, getFundings, refunding } from '../apis/API';
+import { signUp, checkNickname, login, getEmailAuthCode, verifyEmailAuthCode, getUser, funding, getFundings } from '../apis/API';
 
 const useStore = create(persist((set, get) => ({
     email: '',
