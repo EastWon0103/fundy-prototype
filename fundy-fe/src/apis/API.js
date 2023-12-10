@@ -143,8 +143,22 @@ export const getUser = async (token) => {
  * @param {int} pageSize 
  */
 
-
 export const getProjects = async (pageNum, pageSize) => {
+    try {
+        const response = await apiClient.get('/projects', {
+            params: {
+                pageNum,
+                pageSize
+            }
+        })
+        console.log('스크롤 목록 요청 성공', response.data);
+        return response.data;
+        
+    } catch (error) {
+        console.log('스크롤 목록 요청 실패', error);
+        throw error;
+        
+    }
 
 
 }
