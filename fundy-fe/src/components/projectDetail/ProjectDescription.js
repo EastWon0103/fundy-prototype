@@ -24,8 +24,6 @@ export default function ProjectTop({project}) {
             <GenreCard>{genre}</GenreCard>
           ))}
         </GenreSection>
-        {console.log(project)
-        }
         <TitleSection>
           <Title>{project.title}</Title>
         </TitleSection>

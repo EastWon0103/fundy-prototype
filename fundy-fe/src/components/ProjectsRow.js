@@ -1,256 +1,92 @@
 import { Link as RouterLink } from 'react-router-dom'
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 import styled from 'styled-components'
+import { getProjects } from '../apis/API';
+import InfiniteScroll from 'react-infinite-scroll-component';
+import formatCurrency from '../utils/formatCurrency';
 
 export default function ProjectsRow() {
+    const [projects, setProjects] = useState([]);
+    const [page, setPage] = useState(0);
+    const [hasMore, setHasMore] = useState(true);
+
+
+    // 목업데이터
+    // const createMockProjects = (pageNum, pageSize) => {
+    //     return Array.from({ length: pageSize }, (_, index) => ({
+    //         id: (pageNum - 1) * pageSize + index + 1,
+    //         thumbnail: "https://fundy-bucket.s3.ap-northeast-2.amazonaws.com/default/profileImage.png",
+    //         title: `프로젝트 ${pageNum}-${index + 1}`,
+    //         totalFundingAmount: 10000 * (index + 1),
+    //         targetAmount: 500000,
+    //         percentage: ((10000 * (index + 1)) / 500000) * 100,
+    //     }));
+    // };
+
+
+    const loadProjects = async () => {
+        try {
+            const pageSize = 8;
+            const response = await getProjects(page, pageSize);
+            setProjects(prevProjects => [...prevProjects, ...response.result.projectSummarys])
+            setHasMore(response.result.hasNext);
+            setPage(prevPage => prevPage + 1);
+            // 목업데이터
+            // const mockData = createMockProjects(page, pageSize);
+            // setProjects(prevProjects => [...prevProjects, ...mockData]);
+            // setPage(prevPage => prevPage + 1);
+        } catch (error) {
+            console.log('프로젝트 로드 실패', error);
+            
+        }
+    }
+
+    useEffect(() => {
+        loadProjects();
+    }, [])
+
   return (
     <Container>
         <TitleBox>
             <Title>🔥 신규 프로젝트</Title>
         </TitleBox>
-        <ProjectSection>
-            <Link to='/project/1'>
-                <ProjectCard>
-                    <CardImage src='https://s3-alpha-sig.figma.com/img/9945/33a5/614890d3c056cec00b07ae3b1a6a96ba?Expires=1702252800&Signature=Xrtdb0xoSWhG-mpS2hpQZLSJp~uR7eQXJ7hjKWrkcULpY5VDJmxa6VKnADVu3pfKWTQquM7IzQbS2OAJfIH9P77q6VHLmkIZpwavhlDPcGzX5C3oV08zXtxedwxvmF77xC3HHgzMVuZGFWF~Ixu~W~IQrZkTqalbmqIHvivYV1Hex23L8JVaY-wYFKBMZ-51khlzOzv~kWGioPJd57hElIrkW05aBMq9JxAxR1PFXP5Vc1Mo2DaL2AwG9lDyRHCp2RQ2w8OZE9wlRc4d9uHIivSyLgEt3dh0dBNiIf3DT2wd3p69HWxIv2Q1H5FlMZ7PYYNEx~XnCapmKfsHwWvYBw__&Key-Pair-Id=APKAQ4GOSFWCVNEHN3O4'/>
-                    <GenreSection>
-                        <GenreBox>RPG</GenreBox>
-                        <GenreBox>액션</GenreBox>
-                    </GenreSection>
-                    <ProjectTitleBox>
-                        <ProjectTitle>던전의 머시깽이 머시깽이</ProjectTitle>
-                    </ProjectTitleBox>
-                    <DescriptionBox>
-                        카드오브던전클래식은 머시깽이하고 머시깽이하는 머시깽이입니당.
-                    </DescriptionBox>
-                    <AmountBox>
-                        <AmountPercentage>1280% 달성</AmountPercentage>
-                        <Amount>{'|'}1,400,000원</Amount>
-                    </AmountBox>
-                    <Progress value={20} max={100} />
-                </ProjectCard>
-            </Link>
-            <Link to='/project/1'>
-                <ProjectCard>
-                    <CardImage src='https://s3-alpha-sig.figma.com/img/9945/33a5/614890d3c056cec00b07ae3b1a6a96ba?Expires=1702252800&Signature=Xrtdb0xoSWhG-mpS2hpQZLSJp~uR7eQXJ7hjKWrkcULpY5VDJmxa6VKnADVu3pfKWTQquM7IzQbS2OAJfIH9P77q6VHLmkIZpwavhlDPcGzX5C3oV08zXtxedwxvmF77xC3HHgzMVuZGFWF~Ixu~W~IQrZkTqalbmqIHvivYV1Hex23L8JVaY-wYFKBMZ-51khlzOzv~kWGioPJd57hElIrkW05aBMq9JxAxR1PFXP5Vc1Mo2DaL2AwG9lDyRHCp2RQ2w8OZE9wlRc4d9uHIivSyLgEt3dh0dBNiIf3DT2wd3p69HWxIv2Q1H5FlMZ7PYYNEx~XnCapmKfsHwWvYBw__&Key-Pair-Id=APKAQ4GOSFWCVNEHN3O4'/>
-                    <GenreSection>
-                        <GenreBox>RPG</GenreBox>
-                        <GenreBox>액션</GenreBox>
-                    </GenreSection>
-                    <ProjectTitleBox>
-                        <ProjectTitle>던전의 머시깽이 머시깽이</ProjectTitle>
-                    </ProjectTitleBox>
-                    <DescriptionBox>
-                        카드오브던전클래식은 머시깽이하고 머시깽이하는 머시깽이입니당.
-                    </DescriptionBox>
-                    <AmountBox>
-                        <AmountPercentage>1280% 달성</AmountPercentage>
-                        <Amount>{'|'}1,400,000원</Amount>
-                    </AmountBox>
-                    <Progress value={20} max={100} />
-                </ProjectCard>
-            </Link>
-            <Link to='/project/1'>
-                <ProjectCard>
-                    <CardImage src='https://s3-alpha-sig.figma.com/img/9945/33a5/614890d3c056cec00b07ae3b1a6a96ba?Expires=1702252800&Signature=Xrtdb0xoSWhG-mpS2hpQZLSJp~uR7eQXJ7hjKWrkcULpY5VDJmxa6VKnADVu3pfKWTQquM7IzQbS2OAJfIH9P77q6VHLmkIZpwavhlDPcGzX5C3oV08zXtxedwxvmF77xC3HHgzMVuZGFWF~Ixu~W~IQrZkTqalbmqIHvivYV1Hex23L8JVaY-wYFKBMZ-51khlzOzv~kWGioPJd57hElIrkW05aBMq9JxAxR1PFXP5Vc1Mo2DaL2AwG9lDyRHCp2RQ2w8OZE9wlRc4d9uHIivSyLgEt3dh0dBNiIf3DT2wd3p69HWxIv2Q1H5FlMZ7PYYNEx~XnCapmKfsHwWvYBw__&Key-Pair-Id=APKAQ4GOSFWCVNEHN3O4'/>
-                    <GenreSection>
-                        <GenreBox>RPG</GenreBox>
-                        <GenreBox>액션</GenreBox>
-                    </GenreSection>
-                    <ProjectTitleBox>
-                        <ProjectTitle>던전의 머시깽이 머시깽이</ProjectTitle>
-                    </ProjectTitleBox>
-                    <DescriptionBox>
-                        카드오브던전클래식은 머시깽이하고 머시깽이하는 머시깽이입니당.
-                    </DescriptionBox>
-                    <AmountBox>
-                        <AmountPercentage>1280% 달성</AmountPercentage>
-                        <Amount>{'|'}1,400,000원</Amount>
-                    </AmountBox>
-                    <Progress value={20} max={100} />
-                </ProjectCard>
-            </Link>
-            <Link to='/project/1'>
-                <ProjectCard>
-                    <CardImage src='https://s3-alpha-sig.figma.com/img/9945/33a5/614890d3c056cec00b07ae3b1a6a96ba?Expires=1702252800&Signature=Xrtdb0xoSWhG-mpS2hpQZLSJp~uR7eQXJ7hjKWrkcULpY5VDJmxa6VKnADVu3pfKWTQquM7IzQbS2OAJfIH9P77q6VHLmkIZpwavhlDPcGzX5C3oV08zXtxedwxvmF77xC3HHgzMVuZGFWF~Ixu~W~IQrZkTqalbmqIHvivYV1Hex23L8JVaY-wYFKBMZ-51khlzOzv~kWGioPJd57hElIrkW05aBMq9JxAxR1PFXP5Vc1Mo2DaL2AwG9lDyRHCp2RQ2w8OZE9wlRc4d9uHIivSyLgEt3dh0dBNiIf3DT2wd3p69HWxIv2Q1H5FlMZ7PYYNEx~XnCapmKfsHwWvYBw__&Key-Pair-Id=APKAQ4GOSFWCVNEHN3O4'/>
-                    <GenreSection>
-                        <GenreBox>RPG</GenreBox>
-                        <GenreBox>액션</GenreBox>
-                    </GenreSection>
-                    <ProjectTitleBox>
-                        <ProjectTitle>던전의 머시깽이 머시깽이</ProjectTitle>
-                    </ProjectTitleBox>
-                    <DescriptionBox>
-                        카드오브던전클래식은 머시깽이하고 머시깽이하는 머시깽이입니당.
-                    </DescriptionBox>
-                    <AmountBox>
-                        <AmountPercentage>1280% 달성</AmountPercentage>
-                        <Amount>{'|'}1,400,000원</Amount>
-                    </AmountBox>
-                    <Progress value={20} max={100} />
-                </ProjectCard>
-            </Link>
-            <Link to='/project/1'>
-                <ProjectCard>
-                    <CardImage src='https://s3-alpha-sig.figma.com/img/9945/33a5/614890d3c056cec00b07ae3b1a6a96ba?Expires=1702252800&Signature=Xrtdb0xoSWhG-mpS2hpQZLSJp~uR7eQXJ7hjKWrkcULpY5VDJmxa6VKnADVu3pfKWTQquM7IzQbS2OAJfIH9P77q6VHLmkIZpwavhlDPcGzX5C3oV08zXtxedwxvmF77xC3HHgzMVuZGFWF~Ixu~W~IQrZkTqalbmqIHvivYV1Hex23L8JVaY-wYFKBMZ-51khlzOzv~kWGioPJd57hElIrkW05aBMq9JxAxR1PFXP5Vc1Mo2DaL2AwG9lDyRHCp2RQ2w8OZE9wlRc4d9uHIivSyLgEt3dh0dBNiIf3DT2wd3p69HWxIv2Q1H5FlMZ7PYYNEx~XnCapmKfsHwWvYBw__&Key-Pair-Id=APKAQ4GOSFWCVNEHN3O4'/>
-                    <GenreSection>
-                        <GenreBox>RPG</GenreBox>
-                        <GenreBox>액션</GenreBox>
-                    </GenreSection>
-                    <ProjectTitleBox>
-                        <ProjectTitle>던전의 머시깽이 머시깽이</ProjectTitle>
-                    </ProjectTitleBox>
-                    <DescriptionBox>
-                        카드오브던전클래식은 머시깽이하고 머시깽이하는 머시깽이입니당.
-                    </DescriptionBox>
-                    <AmountBox>
-                        <AmountPercentage>1280% 달성</AmountPercentage>
-                        <Amount>{'|'}1,400,000원</Amount>
-                    </AmountBox>
-                    <Progress value={20} max={100} />
-                </ProjectCard>
-            </Link>
-            <Link to='/project/1'>
-                <ProjectCard>
-                    <CardImage src='https://s3-alpha-sig.figma.com/img/9945/33a5/614890d3c056cec00b07ae3b1a6a96ba?Expires=1702252800&Signature=Xrtdb0xoSWhG-mpS2hpQZLSJp~uR7eQXJ7hjKWrkcULpY5VDJmxa6VKnADVu3pfKWTQquM7IzQbS2OAJfIH9P77q6VHLmkIZpwavhlDPcGzX5C3oV08zXtxedwxvmF77xC3HHgzMVuZGFWF~Ixu~W~IQrZkTqalbmqIHvivYV1Hex23L8JVaY-wYFKBMZ-51khlzOzv~kWGioPJd57hElIrkW05aBMq9JxAxR1PFXP5Vc1Mo2DaL2AwG9lDyRHCp2RQ2w8OZE9wlRc4d9uHIivSyLgEt3dh0dBNiIf3DT2wd3p69HWxIv2Q1H5FlMZ7PYYNEx~XnCapmKfsHwWvYBw__&Key-Pair-Id=APKAQ4GOSFWCVNEHN3O4'/>
-                    <GenreSection>
-                        <GenreBox>RPG</GenreBox>
-                        <GenreBox>액션</GenreBox>
-                    </GenreSection>
-                    <ProjectTitleBox>
-                        <ProjectTitle>던전의 머시깽이 머시깽이</ProjectTitle>
-                    </ProjectTitleBox>
-                    <DescriptionBox>
-                        카드오브던전클래식은 머시깽이하고 머시깽이하는 머시깽이입니당.
-                    </DescriptionBox>
-                    <AmountBox>
-                        <AmountPercentage>1280% 달성</AmountPercentage>
-                        <Amount>{'|'}1,400,000원</Amount>
-                    </AmountBox>
-                    <Progress value={20} max={100} />
-                </ProjectCard>
-            </Link>
-            <Link to='/project/1'>
-                <ProjectCard>
-                    <CardImage src='https://s3-alpha-sig.figma.com/img/9945/33a5/614890d3c056cec00b07ae3b1a6a96ba?Expires=1702252800&Signature=Xrtdb0xoSWhG-mpS2hpQZLSJp~uR7eQXJ7hjKWrkcULpY5VDJmxa6VKnADVu3pfKWTQquM7IzQbS2OAJfIH9P77q6VHLmkIZpwavhlDPcGzX5C3oV08zXtxedwxvmF77xC3HHgzMVuZGFWF~Ixu~W~IQrZkTqalbmqIHvivYV1Hex23L8JVaY-wYFKBMZ-51khlzOzv~kWGioPJd57hElIrkW05aBMq9JxAxR1PFXP5Vc1Mo2DaL2AwG9lDyRHCp2RQ2w8OZE9wlRc4d9uHIivSyLgEt3dh0dBNiIf3DT2wd3p69HWxIv2Q1H5FlMZ7PYYNEx~XnCapmKfsHwWvYBw__&Key-Pair-Id=APKAQ4GOSFWCVNEHN3O4'/>
-                    <GenreSection>
-                        <GenreBox>RPG</GenreBox>
-                        <GenreBox>액션</GenreBox>
-                    </GenreSection>
-                    <ProjectTitleBox>
-                        <ProjectTitle>던전의 머시깽이 머시깽이</ProjectTitle>
-                    </ProjectTitleBox>
-                    <DescriptionBox>
-                        카드오브던전클래식은 머시깽이하고 머시깽이하는 머시깽이입니당.
-                    </DescriptionBox>
-                    <AmountBox>
-                        <AmountPercentage>1280% 달성</AmountPercentage>
-                        <Amount>{'|'}1,400,000원</Amount>
-                    </AmountBox>
-                    <Progress value={20} max={100} />
-                </ProjectCard>
-            </Link>
-            <Link to='/project/1'>
-                <ProjectCard>
-                    <CardImage src='https://s3-alpha-sig.figma.com/img/9945/33a5/614890d3c056cec00b07ae3b1a6a96ba?Expires=1702252800&Signature=Xrtdb0xoSWhG-mpS2hpQZLSJp~uR7eQXJ7hjKWrkcULpY5VDJmxa6VKnADVu3pfKWTQquM7IzQbS2OAJfIH9P77q6VHLmkIZpwavhlDPcGzX5C3oV08zXtxedwxvmF77xC3HHgzMVuZGFWF~Ixu~W~IQrZkTqalbmqIHvivYV1Hex23L8JVaY-wYFKBMZ-51khlzOzv~kWGioPJd57hElIrkW05aBMq9JxAxR1PFXP5Vc1Mo2DaL2AwG9lDyRHCp2RQ2w8OZE9wlRc4d9uHIivSyLgEt3dh0dBNiIf3DT2wd3p69HWxIv2Q1H5FlMZ7PYYNEx~XnCapmKfsHwWvYBw__&Key-Pair-Id=APKAQ4GOSFWCVNEHN3O4'/>
-                    <GenreSection>
-                        <GenreBox>RPG</GenreBox>
-                        <GenreBox>액션</GenreBox>
-                    </GenreSection>
-                    <ProjectTitleBox>
-                        <ProjectTitle>던전의 머시깽이 머시깽이</ProjectTitle>
-                    </ProjectTitleBox>
-                    <DescriptionBox>
-                        카드오브던전클래식은 머시깽이하고 머시깽이하는 머시깽이입니당.
-                    </DescriptionBox>
-                    <AmountBox>
-                        <AmountPercentage>1280% 달성</AmountPercentage>
-                        <Amount>{'|'}1,400,000원</Amount>
-                    </AmountBox>
-                    <Progress value={20} max={100} />
-                </ProjectCard>
-            </Link>
-            <Link to='/project/1'>
-                <ProjectCard>
-                    <CardImage src='https://s3-alpha-sig.figma.com/img/9945/33a5/614890d3c056cec00b07ae3b1a6a96ba?Expires=1702252800&Signature=Xrtdb0xoSWhG-mpS2hpQZLSJp~uR7eQXJ7hjKWrkcULpY5VDJmxa6VKnADVu3pfKWTQquM7IzQbS2OAJfIH9P77q6VHLmkIZpwavhlDPcGzX5C3oV08zXtxedwxvmF77xC3HHgzMVuZGFWF~Ixu~W~IQrZkTqalbmqIHvivYV1Hex23L8JVaY-wYFKBMZ-51khlzOzv~kWGioPJd57hElIrkW05aBMq9JxAxR1PFXP5Vc1Mo2DaL2AwG9lDyRHCp2RQ2w8OZE9wlRc4d9uHIivSyLgEt3dh0dBNiIf3DT2wd3p69HWxIv2Q1H5FlMZ7PYYNEx~XnCapmKfsHwWvYBw__&Key-Pair-Id=APKAQ4GOSFWCVNEHN3O4'/>
-                    <GenreSection>
-                        <GenreBox>RPG</GenreBox>
-                        <GenreBox>액션</GenreBox>
-                    </GenreSection>
-                    <ProjectTitleBox>
-                        <ProjectTitle>던전의 머시깽이 머시깽이</ProjectTitle>
-                    </ProjectTitleBox>
-                    <DescriptionBox>
-                        카드오브던전클래식은 머시깽이하고 머시깽이하는 머시깽이입니당.
-                    </DescriptionBox>
-                    <AmountBox>
-                        <AmountPercentage>1280% 달성</AmountPercentage>
-                        <Amount>{'|'}1,400,000원</Amount>
-                    </AmountBox>
-                    <Progress value={20} max={100} />
-                </ProjectCard>
-            </Link>
-            <Link to='/project/1'>
-                <ProjectCard>
-                    <CardImage src='https://s3-alpha-sig.figma.com/img/9945/33a5/614890d3c056cec00b07ae3b1a6a96ba?Expires=1702252800&Signature=Xrtdb0xoSWhG-mpS2hpQZLSJp~uR7eQXJ7hjKWrkcULpY5VDJmxa6VKnADVu3pfKWTQquM7IzQbS2OAJfIH9P77q6VHLmkIZpwavhlDPcGzX5C3oV08zXtxedwxvmF77xC3HHgzMVuZGFWF~Ixu~W~IQrZkTqalbmqIHvivYV1Hex23L8JVaY-wYFKBMZ-51khlzOzv~kWGioPJd57hElIrkW05aBMq9JxAxR1PFXP5Vc1Mo2DaL2AwG9lDyRHCp2RQ2w8OZE9wlRc4d9uHIivSyLgEt3dh0dBNiIf3DT2wd3p69HWxIv2Q1H5FlMZ7PYYNEx~XnCapmKfsHwWvYBw__&Key-Pair-Id=APKAQ4GOSFWCVNEHN3O4'/>
-                    <GenreSection>
-                        <GenreBox>RPG</GenreBox>
-                        <GenreBox>액션</GenreBox>
-                    </GenreSection>
-                    <ProjectTitleBox>
-                        <ProjectTitle>던전의 머시깽이 머시깽이</ProjectTitle>
-                    </ProjectTitleBox>
-                    <DescriptionBox>
-                        카드오브던전클래식은 머시깽이하고 머시깽이하는 머시깽이입니당.
-                    </DescriptionBox>
-                    <AmountBox>
-                        <AmountPercentage>1280% 달성</AmountPercentage>
-                        <Amount>{'|'}1,400,000원</Amount>
-                    </AmountBox>
-                    <Progress value={20} max={100} />
-                </ProjectCard>
-            </Link>
-            <Link to='/project/1'>
-                <ProjectCard>
-                    <CardImage src='https://s3-alpha-sig.figma.com/img/9945/33a5/614890d3c056cec00b07ae3b1a6a96ba?Expires=1702252800&Signature=Xrtdb0xoSWhG-mpS2hpQZLSJp~uR7eQXJ7hjKWrkcULpY5VDJmxa6VKnADVu3pfKWTQquM7IzQbS2OAJfIH9P77q6VHLmkIZpwavhlDPcGzX5C3oV08zXtxedwxvmF77xC3HHgzMVuZGFWF~Ixu~W~IQrZkTqalbmqIHvivYV1Hex23L8JVaY-wYFKBMZ-51khlzOzv~kWGioPJd57hElIrkW05aBMq9JxAxR1PFXP5Vc1Mo2DaL2AwG9lDyRHCp2RQ2w8OZE9wlRc4d9uHIivSyLgEt3dh0dBNiIf3DT2wd3p69HWxIv2Q1H5FlMZ7PYYNEx~XnCapmKfsHwWvYBw__&Key-Pair-Id=APKAQ4GOSFWCVNEHN3O4'/>
-                    <GenreSection>
-                        <GenreBox>RPG</GenreBox>
-                        <GenreBox>액션</GenreBox>
-                    </GenreSection>
-                    <ProjectTitleBox>
-                        <ProjectTitle>던전의 머시깽이 머시깽이</ProjectTitle>
-                    </ProjectTitleBox>
-                    <DescriptionBox>
-                        카드오브던전클래식은 머시깽이하고 머시깽이하는 머시깽이입니당.
-                    </DescriptionBox>
-                    <AmountBox>
-                        <AmountPercentage>1280% 달성</AmountPercentage>
-                        <Amount>{'|'}1,400,000원</Amount>
-                    </AmountBox>
-                    <Progress value={20} max={100} />
-                </ProjectCard>
-            </Link>
-            <Link to='/project/1'>
-                <ProjectCard>
-                    <CardImage src='https://s3-alpha-sig.figma.com/img/9945/33a5/614890d3c056cec00b07ae3b1a6a96ba?Expires=1702252800&Signature=Xrtdb0xoSWhG-mpS2hpQZLSJp~uR7eQXJ7hjKWrkcULpY5VDJmxa6VKnADVu3pfKWTQquM7IzQbS2OAJfIH9P77q6VHLmkIZpwavhlDPcGzX5C3oV08zXtxedwxvmF77xC3HHgzMVuZGFWF~Ixu~W~IQrZkTqalbmqIHvivYV1Hex23L8JVaY-wYFKBMZ-51khlzOzv~kWGioPJd57hElIrkW05aBMq9JxAxR1PFXP5Vc1Mo2DaL2AwG9lDyRHCp2RQ2w8OZE9wlRc4d9uHIivSyLgEt3dh0dBNiIf3DT2wd3p69HWxIv2Q1H5FlMZ7PYYNEx~XnCapmKfsHwWvYBw__&Key-Pair-Id=APKAQ4GOSFWCVNEHN3O4'/>
-                    <GenreSection>
-                        <GenreBox>RPG</GenreBox>
-                        <GenreBox>액션</GenreBox>
-                    </GenreSection>
-                    <ProjectTitleBox>
-                        <ProjectTitle>던전의 머시깽이 머시깽이</ProjectTitle>
-                    </ProjectTitleBox>
-                    <DescriptionBox>
-                        카드오브던전클래식은 머시깽이하고 머시깽이하는 머시깽이입니당.
-                    </DescriptionBox>
-                    <AmountBox>
-                        <AmountPercentage>1280% 달성</AmountPercentage>
-                        <Amount>{'|'}1,400,000원</Amount>
-                    </AmountBox>
-                    <Progress value={20} max={100} />
-                </ProjectCard>
-            </Link>
+        <InfiniteScroll
+            dataLength={projects.length}
+            next={loadProjects}
+            hasMore={hasMore}
+            loader={<h4 style={{ textAlign: 'center' }}>Loading...</h4>}
+            endMessage={
+                <p style={{ textAlign: 'center'}}>
+                    <b>모든 프로젝트를 불러왔습니다.</b>
+                </p>
+            }>
+            <ProjectSection>
+                {projects.map(project => (
+                    <Link key={project.id} to={`/project/${project.id}`}>
+                        <ProjectCard>
+                            <CardImage src={project.thumbnail}/>
+                            <GenreSection>
+                                <GenreBox>RPG</GenreBox>
+                                <GenreBox>액션</GenreBox>
+                            </GenreSection>
+                            <ProjectTitleBox>
+                                <ProjectTitle>{project.title}</ProjectTitle>
+                            </ProjectTitleBox>
+                            <DescriptionBox>
+                                카드오브던전클래식은 머시깽이하고 머시깽이하는 머시깽이입니당.
+                            </DescriptionBox>
+                            <AmountBox>
+                                <AmountPercentage>{project.percentage.toFixed(2)}{'%'} 달성</AmountPercentage>
+                                <Amount>{'|'}{formatCurrency(project.totalFundingAmount)}원</Amount>
+                            </AmountBox>
+                            <Progress value={project.percentage.toFixed(2)} max={100} />
+                        </ProjectCard>
+                    </Link>
 
-        </ProjectSection>
+                ))}
+
+            </ProjectSection>
+        </InfiniteScroll>
     </Container>
 
   )
