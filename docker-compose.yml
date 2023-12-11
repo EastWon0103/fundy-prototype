@@ -17,6 +17,7 @@ services:
       - ./fundy-be/fundy-core:/fundy-core
       - ./fundy-be/api-adapter:/api-adapter
       - ./fundy-be/persistent-adapter:/persistent-adapter
+      - ./fundy-be/email-adapter:/email-adapter
     command: "./gradlew clean build --parallel -x test"
 
   mysql:
