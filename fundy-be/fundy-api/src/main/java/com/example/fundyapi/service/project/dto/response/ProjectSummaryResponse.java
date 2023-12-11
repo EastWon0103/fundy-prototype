@@ -6,6 +6,8 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
+import java.util.List;
+
 @Getter
 @Builder
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
@@ -17,4 +19,6 @@ public class ProjectSummaryResponse {
     private int totalFundingAmount;
     private int targetAmount;
     private double percentage;
+    private List<String> genres;
+    private String description;
 }
