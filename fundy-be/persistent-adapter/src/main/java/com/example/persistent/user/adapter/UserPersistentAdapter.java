@@ -62,4 +62,9 @@ public class UserPersistentAdapter implements SaveUserPort, FindUserPort, Valida
     public boolean existsByNickname(String nickname) {
         return userRepository.existsByNickname(nickname);
     }
+
+    @Override
+    public boolean existsByEmail(String email) {
+        return userRepository.existsByEmail(email);
+    }
 }
