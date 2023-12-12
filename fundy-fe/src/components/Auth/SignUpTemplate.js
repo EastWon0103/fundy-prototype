@@ -1,9 +1,9 @@
 import React, { useState } from 'react'
-import useStore from '../store/store'
+import useStore from '../../store/store'
 import styled from 'styled-components'
-import isValidEmail from '../utils/isValidateEmail';
-import isValidPassword from '../utils/isValidatePassword';
-import isValidateNickname from '../utils/isValidateNickname';
+import isValidEmail from '../../utils/isValidateEmail';
+import isValidPassword from '../../utils/isValidatePassword';
+import isValidateNickname from '../../utils/isValidateNickname';
 import {useNavigate} from 'react-router-dom';
 
 export default function SignUpTemplate() {
