@@ -1,6 +1,6 @@
 import React, { useEffect, useRef } from 'react'
 import styled from 'styled-components';
-import PdfContent from '../projectDetail/PdfContent';
+import PdfContent from '../ProjectDetail/PdfContent';
 import DevNoteComment from './DevNoteComment';
 
 export default function DevNotePopUp({pdfUrl, onClose, devNoteId}) {
