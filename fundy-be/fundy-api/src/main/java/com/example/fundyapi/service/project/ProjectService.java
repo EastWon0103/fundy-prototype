@@ -71,6 +71,9 @@ public class ProjectService implements ProjectUseCase {
                     .totalFundingAmount(totalFundingAmount)
                     .targetAmount(project.getTargetAmount())
                     .percentage(percentage)
+                    .genres(project.getGenres().stream().map(Genre::getName)
+                        .collect(Collectors.toList()))
+                    .description(project.getDescription())
                     .build();
             }).collect(Collectors.toList()))
             .build();
