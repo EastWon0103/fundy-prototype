@@ -12,8 +12,7 @@ export default function ProjectTop({project}) {
   const formattedPercentage = project.percentage.toFixed(2);
 
 
-  return (
-    
+  return (    
     <Container>
       <CardSection>
         <CardImage src={project.thumbnail} />
