@@ -1,9 +1,9 @@
 import { Link as RouterLink } from 'react-router-dom'
 import React, { useEffect, useState } from 'react'
 import styled from 'styled-components'
-import { getProjects } from '../apis/API';
+import { getProjects } from '../../apis/API';
 import InfiniteScroll from 'react-infinite-scroll-component';
-import formatCurrency from '../utils/formatCurrency';
+import formatCurrency from '../../utils/formatCurrency';
 
 export default function ProjectsRow() {
     const [projects, setProjects] = useState([]);
@@ -199,4 +199,3 @@ const Link = styled(RouterLink)`
     text-decoration: none;
     color: inherit;
 `
-

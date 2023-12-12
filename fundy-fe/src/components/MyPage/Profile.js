@@ -1,9 +1,9 @@
 import React, { useEffect, useState } from 'react'
 import styled from 'styled-components'
-import useStore from '../store/store'
-import formatCurrency from '../utils/formatCurrency'
+import useStore from '../../store/store'
+import formatCurrency from '../../utils/formatCurrency'
 import { Link as RouterLink } from 'react-router-dom'
-import { refunding } from '../apis/API'
+import { refunding } from '../../apis/API'
 
 export default function Profile() {
 
