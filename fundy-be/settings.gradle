@@ -6,4 +6,5 @@ include 'fundy-core'
 include 'fundy-core:domain'
 include 'persistent-adapter'
 include 'api-adapter'
+include 'email-adapter'
 

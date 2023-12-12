@@ -1,5 +1,6 @@
 package com.example.core.application.user;
 
+import com.example.core.application.intermiddle.user.UserExistenceConnector;
 import com.example.core.application.user.input.AuthUseCase;
 import com.example.core.application.user.input.CheckDuplicateNicknameUseCase;
 import com.example.core.application.user.input.GetUserInfoUseCase;
@@ -7,8 +8,6 @@ import com.example.core.application.user.input.SecurityUseCase;
 import com.example.core.application.user.input.dto.req.SignInServiceRequest;
 import com.example.core.application.user.input.dto.req.SignUpServiceRequest;
 import com.example.core.application.user.input.dto.res.DuplicateNicknameResponse;
-import com.example.core.application.user.input.dto.res.SecurityUserInfoResponse;
-import com.example.core.application.user.input.dto.res.SignInResponse;
 import com.example.core.application.user.input.dto.res.UserInfoResponse;
 import com.example.core.application.user.output.FindAccountPort;
 import com.example.core.application.user.output.FindUserPort;
@@ -17,6 +16,8 @@ import com.example.core.application.user.output.SaveUserPort;
 import com.example.core.application.user.output.ValidateUserPort;
 import com.example.core.application.user.output.dto.req.SaveUserRequest;
 import com.example.core.application.user.output.dto.res.LoadUserInfoResponse;
+import com.example.core.application.user.input.dto.res.SecurityUserInfoResponse;
+import com.example.core.application.user.input.dto.res.SignInResponse;
 import com.example.core.utils.exception.CoreExceptionFactory;
 import com.example.core.utils.exception.CoreExceptionType;
 import com.example.core.utils.token.JwtUtil;
@@ -32,7 +33,7 @@ import org.springframework.transaction.annotation.Transactional;
 @Transactional(readOnly = true)
 @Service
 @RequiredArgsConstructor
-public class UserService implements AuthUseCase, GetUserInfoUseCase, SecurityUseCase, CheckDuplicateNicknameUseCase {
+public class UserService implements AuthUseCase, GetUserInfoUseCase, SecurityUseCase, CheckDuplicateNicknameUseCase, UserExistenceConnector {
     private final SaveUserPort saveUserPort;
     private final SaveAccountPort saveAccountPort;
     private final FindAccountPort findAccountPort;
@@ -98,5 +99,10 @@ public class UserService implements AuthUseCase, GetUserInfoUseCase, SecurityUse
             .isDuplicate(validateUserPort.existsByNickname(nickname))
             .nickname(nickname)
             .build();
+    }
+
+    @Override
+    public boolean isExistByEmail(String email) {
+        return validateUserPort.existsByEmail(email);
     }
 }
