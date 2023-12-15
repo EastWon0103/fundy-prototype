@@ -3,12 +3,28 @@ import styled from 'styled-components'
 import formatCurrency from '../../utils/formatCurrency'
 import PdfContent from './PdfContent'
 import useStore from '../../store/store'
+import { funding } from '../../apis/API'
 
 
 export default function ProjectBottom({ project }) {
+    const { user, token } = useStore();
 
-    const performFunding = useStore(state => state.performFunding);
-    // const getFundings = useStore(state => state.getFundings);
+    const performFunding = async (rewardId, amount) => {
+        if (user.accounts[0].balance >= amount) {
+            try {
+                await funding(rewardId, user.id, amount, token);
+                return true;
+            } catch (error) {
+                console.log('후원 에러', error);
+                throw error;
+                
+            }
+        } else {
+            console.log('잔고 부족');
+            return false;
+        }
+
+    }
 
     const handleFundingClick = async (rewardId, amount) => {
         try {
@@ -16,9 +32,11 @@ export default function ProjectBottom({ project }) {
             if(isSuccess) {
                 alert('후원성공');
                 window.location.reload();
+            } else {
+                alert('잔고 부족')
             }
         } catch (error) {
-            alert('잔고부족');
+            console.log('에러', error)
         }
     }
 
@@ -43,9 +61,7 @@ export default function ProjectBottom({ project }) {
                     <RewardItemList>
                         <RewardItem>{reward.item}</RewardItem>
                         <RewardItem>{reward.item}</RewardItem>
-
                         <RewardItem>{reward.item}</RewardItem>
-
                     </RewardItemList>
                     <FundingButton onClick={() => handleFundingClick(reward.id, reward.minimumPrice)}>{formatCurrency(reward.minimumPrice)}원 후원하기</FundingButton>
                 </RewardCard>

@@ -4,17 +4,16 @@ import useStore from '../store/store';
 import styled from 'styled-components';
 
 export default function MyPage() {
-  const { getUserInfo, getFundings } = useStore();
+  const { getUserInfo } = useStore();
 
   useEffect(() => {
     const fetchData = async() => {
       await getUserInfo();
-      await getFundings();
 
     }
     fetchData();
 
-  }, [getUserInfo, getFundings])
+  }, [getUserInfo])
     
   return (
     <Body>
