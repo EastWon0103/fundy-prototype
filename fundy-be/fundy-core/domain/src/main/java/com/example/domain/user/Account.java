@@ -1,6 +1,7 @@
 package com.example.domain.user;
 
 
+import com.example.domain.common.vo.Money;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -15,12 +16,7 @@ import org.apache.commons.lang3.RandomStringUtils;
 public class Account {
     private long id;
     private String number;
-    private int balance;
-
-    private Account(String number, int balance) {
-        this.number = number;
-        this.balance = balance;
-    }
+    private Money balance;
 
     public static String generateRandomNumber() {
         String number = RandomStringUtils.randomNumeric(11);
@@ -30,14 +26,11 @@ public class Account {
         return sb.toString();
     }
 
-    public void deposit(int amount) {
-        balance+=amount;
+    public void deposit(Money money) {
+        balance.plus(money);
     }
 
-    public void withdraw(int amount) {
-        if(balance<amount)
-            throw new IllegalArgumentException("잔고 부족");
-
-        balance-=amount;
+    public void withdraw(Money money) {
+        balance.minus(money);
     }
 }

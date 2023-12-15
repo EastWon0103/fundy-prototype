@@ -5,7 +5,7 @@ import com.example.core.application.email.input.dto.req.VerifyEmailServiceReques
 import com.example.core.application.email.input.dto.res.EmailVerifyResponse;
 import com.example.core.application.email.input.dto.res.IsVerifyEmailResponse;
 import com.example.core.application.email.output.SendVerifyEmailPort;
-import com.example.core.application.intermiddle.user.UserExistenceConnector;
+import com.example.core.application.intermiddle.user.UserValidateConnector;
 import com.example.core.utils.exception.CoreExceptionFactory;
 import com.example.core.utils.exception.CoreExceptionType;
 import com.example.core.utils.token.email.EmailVerifyTokenProvider;
@@ -17,13 +17,13 @@ import org.springframework.stereotype.Service;
 @Service
 @RequiredArgsConstructor
 public class EmailAuthenticationService implements EmailAuthenticationUseCase {
-    private final UserExistenceConnector userExistenceConnector;
+    private final UserValidateConnector userValidateConnector;
     private final EmailVerifyTokenProvider emailVerifyTokenProvider;
     private final SendVerifyEmailPort sendVerifyEmailPort;
 
     @Override
     public EmailVerifyResponse sendEmailVerifyCode(String email) {
-        if (userExistenceConnector.isExistByEmail(email))
+        if (userValidateConnector.isExistByEmail(email))
             throw CoreExceptionFactory.createBasic(CoreExceptionType.DUPLICATE_USER);
 
         String verifyCode = RandomStringUtils.randomAlphanumeric(8);

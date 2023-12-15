@@ -6,4 +6,5 @@ import java.util.Optional;
 
 public interface FindUserPort {
     Optional<LoadUserInfoResponse> findByEmail(String email);
+    Optional<LoadUserInfoResponse> findById(long id);
 }
