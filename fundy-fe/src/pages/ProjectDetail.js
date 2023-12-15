@@ -2,9 +2,9 @@ import React from 'react'
 import { useParams } from 'react-router'
 import useProject from '../hooks/useProject';
 import styled from 'styled-components';
-import ProjectDescription from '../components/projectDetail/ProjectDescription';
-import GoToDevNote from '../components/projectDetail/GoToDevNote';
-import ProjectBottom from '../components/projectDetail/ProjectBottom';
+import ProjectDescription from '../components/ProjectDetail/ProjectDescription';
+import GoToDevNote from '../components/ProjectDetail/GoToDevNote';
+import ProjectBottom from '../components/ProjectDetail/ProjectBottom';
 import useRewards from '../hooks/useRewards';
 
 export default function ProjectDetail() {
@@ -23,7 +23,7 @@ export default function ProjectDetail() {
         <Body>
   
           <ProjectDescription project={project} />
-          <GoToDevNote />
+          <GoToDevNote projectId={id}/>
           <ProjectBottom rewards={rewards} project={project}/>
   
         </Body>

@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import styled from 'styled-components';
-import truncate from '../utils/truncate';
+import truncate from '../../utils/truncate';
 
 export default function Carousel({ images, bannerContents }) {
     const [currentIndex, setCurrentIndex] = useState(0);
