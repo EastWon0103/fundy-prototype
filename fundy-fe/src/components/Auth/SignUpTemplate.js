@@ -1,55 +1,65 @@
 import React, { useState } from 'react'
 import useStore from '../../store/store'
 import styled from 'styled-components'
-import isValidEmail from '../../utils/isValidateEmail';
-import isValidPassword from '../../utils/isValidatePassword';
-import isValidateNickname from '../../utils/isValidateNickname';
+import checkEmailFormat from '../../utils/checkEmailFormat';
+import checkPasswordFormat from '../../utils/checkPasswordFormat';
+import checkNicknameFormat from '../../utils/checkNicknameFormat';
 import {useNavigate} from 'react-router-dom';
+import { checkNickname, getEmailAuthCode, signUp, verifyEmailAuthCode } from '../../apis/API';
 
 export default function SignUpTemplate() {
     const navigate = useNavigate();
 
+    // 입력 값 상태
+    const [email, setEmail] = useState('');
+    const [password, setPassword] = useState('');
+    const [nickname, setNickname] = useState('');
+    const [code, setCode] = useState('');
+
+    // 입력 값 유효성 체크
     const [isEmailValid, setIsEmailValid] = useState(false);
     const [isPasswordValid, setIsPasswordValid] = useState(false);
-    const [isNicknameValid, setIsNicknameValid] = useState(false);
+    const [isNicknameValid, setIsNicknameValid] = useState(null);
 
-    const {
-        email,
-        password, 
-        nickname,
-        code, 
-        setEmail, 
-        setPassword, 
-        setNickname,
-        setCode, 
-        checkValidNickname, 
-        isValidNickname,
-        isVerifyEmail, 
-        performSignUp,
-        performEmailAuthCode,
-        verifyEmailAuthCode } = useStore();
+    // 닉네임 중복 체크
+    const [isNicknameDuplicated, setIsNicknameDuplicated] = useState(false);
+
+    // 이메일 인증 체크
+    const [isVerifyEmail, setIsVerifyEmail] = useState(false);
+
+    const { token, setToken } = useStore();
 
     const handleEmailChange = (e) => {
         const emailValue = e.target.value;
         setEmail(emailValue);
-        setIsEmailValid(isValidEmail(emailValue));
+        setIsEmailValid(checkEmailFormat(emailValue));
     }
 
     const handlePasswordChange = (e) => {
         const passwordValue = e.target.value;
         setPassword(passwordValue);
-        setIsPasswordValid(isValidPassword(passwordValue));
+        setIsPasswordValid(checkPasswordFormat(passwordValue));
     }
 
     const handleNicknameChange = (e) => {
         const nicknameValue = e.target.value;
         setNickname(nicknameValue);
-        setIsNicknameValid(isValidateNickname(nicknameValue));
+        setIsNicknameValid(checkNicknameFormat(nicknameValue));
     }
 
     const handleCodeChange = (e) => {
         const codeValue = e.target.value;
         setCode(codeValue);
+    }
+
+    const checkNicknameDuplication = async () => {
+        try {
+            const response = await checkNickname(nickname);
+            setIsNicknameDuplicated(response.result.duplicate);
+        } catch (error) {
+            console.log('닉네임 중복검사 중 오류 발생', error);
+            setIsNicknameDuplicated(null);
+        }
     }
 
     const handleCheckNickname = async (e) => {
@@ -58,8 +68,8 @@ export default function SignUpTemplate() {
             alert('유효하지 않은 닉네임입니다. 닉네임을 확인해주세요.')
             return;
         } else {
-            const isValid = await checkValidNickname();
-            if (isValid) {
+            await checkNicknameDuplication(nickname);
+            if (!isNicknameDuplicated) {
                 alert('사용 가능한 닉네임입니다.');
             } else {
                 alert('중복된 닉네임입니다.');
@@ -67,9 +77,21 @@ export default function SignUpTemplate() {
         }
     };
 
+    const postEmailAuthCode = async () => {
+        try {
+            const response = await getEmailAuthCode(email);            
+            setToken(response.result.token);
+            return true;
+        } catch (error) {
+            console.log('인증코드 발송 실패', error)
+            return false;
+            
+        }
+    }
+
     const handleEmailAuthCode = async (e) => {
         e.preventDefault();
-        const isSuccess = await performEmailAuthCode();
+        const isSuccess = await postEmailAuthCode();
         if(isSuccess) {
             alert('인증코드 발송 완료')
         } else {
@@ -79,14 +101,33 @@ export default function SignUpTemplate() {
 
     const handleVerifyEmailAuthCode = async (e) => {
         e.preventDefault();
-        const isSuccess = await verifyEmailAuthCode();
-        
-        if(isSuccess) {
-            alert('인증 완료')
-        } else {
-            alert('인증 실패')
+        try {
+            const response = await verifyEmailAuthCode(email, token, code)
+            if(response.result.verify) {
+                setIsVerifyEmail(true);
+                alert('인증완료')
+            } else {
+                setIsVerifyEmail(false);
+                alert('인증 실패');
+            }
+
+        } catch (error) {
+            console.log('인증 중 오류 발생', error)
+            alert('인증 중 오류 발생')
+            throw error;
         }
 
+    }
+
+    const performSignUp = async () => {
+        try {
+            await signUp(email, password, nickname);
+            return true;
+        } catch (error) {
+            console.log('회원가입 실패', error)
+            alert('회원가입 실패. 다시 시도 해주세요')
+            return false;
+        }
     }
 
     const handleSignUp = async (e) => {
@@ -114,10 +155,10 @@ export default function SignUpTemplate() {
         }
     
         // 닉네임 중복 검사 확인
-        if (isValidNickname === undefined) {
+        if (isNicknameDuplicated === null) {
             alert('닉네임 중복체크를 수행해주세요.');
             return;
-        } else if (!isValidNickname) {
+        } else if (isNicknameDuplicated) {
             alert('닉네임이 중복입니다.');
             return;
         }

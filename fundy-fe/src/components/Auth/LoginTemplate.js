@@ -1,12 +1,16 @@
-import React from 'react'
+import React, { useState } from 'react'
 import styled from 'styled-components';
 import useStore from '../../store/store';
 import { useNavigate } from 'react-router';
+import { login } from '../../apis/API';
 
 export default function LoginTemplate() {
 
-  const { email, password, setEmail, setPassword, performLogin, getUserInfo } = useStore();
+  const { setToken, setIsLoggedIn, getUserInfo } = useStore();
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
   const navigate = useNavigate();
+
   const handleEmailChange = (e) => {
     const emailValue = e.target.value;
     setEmail(emailValue);
@@ -17,12 +21,26 @@ export default function LoginTemplate() {
     setPassword(passwordValue);
   }
 
+  const performLogin = async () => {
+    try {
+      const response = await login(email, password);
+      setIsLoggedIn(true)
+      setToken(response.result.token);
+      return true;
+
+    } catch (error) {
+      console.log('로그인 실패', error)
+      return false;
+      
+    }
+  }
+
   const handleLogin = async (e) => {
     e.preventDefault();
     const loginSuccess = await performLogin();
     if (loginSuccess) {
+      await getUserInfo();
       navigate('/');
-      getUserInfo();
     } else {
       alert('로그인에 실패 했습니다. 이메일과 비밀번호를 확인해주세요.')
       return;
@@ -74,7 +92,6 @@ const Container = styled.div`
 `;
 
 const Title = styled.h2`
-  // font-family: 'Noto Sans CJK KR';
   font-weight: 700;
   font-size: 32px;
   line-height: 47px;

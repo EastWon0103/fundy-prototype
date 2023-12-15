@@ -1,83 +1,20 @@
 import { create } from 'zustand';
 import { persist } from 'zustand/middleware';
-import { signUp, checkNickname, login, getEmailAuthCode, verifyEmailAuthCode, getUser, funding, getFundings } from '../apis/API';
+import { login, getUser, funding, getFundings } from '../apis/API';
 
-const useStore = create(persist((set, get) => ({
-    email: '',
-    password: '',
-    nickname: '',
-    isValidNickname: undefined,
+const useStore = create(persist((set) => ({
+
     isLoggedIn: false,
-    isVerifyEmail: false,
-    code: '',
     token: null,
     user: {},
     project: null,
     rewards: null,
     fundings: null,
 
-    setEmail: (email) => set(() => ({ email })),
-    setPassword: (password) => set(() => ({ password })),
-    setNickname: (nickname) => set(() => ({ nickname })),
-    setCode: (code) => set(() => ({ code })),
-    setIsValidNickname: (isValid) => set(() => ({ isValidNickname: isValid })),
+    setIsLoggedIn: (isLoggedIn) => set({ isLoggedIn: isLoggedIn}),
+    setToken: (token) => set({ token: token}),
     setProject: (projectData) => set({ project: projectData }),
     setRewards: (rewardsData) => set({ rewards: rewardsData }),
-
-    checkValidNickname: async () => {
-        const { nickname } = useStore.getState();
-        try {
-            const response = await checkNickname(nickname);
-            const isDuplicate = response.result.duplicate;
-            const isValid = !isDuplicate;
-            set({ isValidNickname: isValid });
-            return isValid;
-        } catch (error) {
-            console.log('닉네임 중복검사 중 오류 발생', error);
-            set({ isValidNickname: false });
-            return false;
-        }
-    },
-
-    performEmailAuthCode: async () => {
-        const { email } = useStore.getState();
-        try {
-            const response = await getEmailAuthCode(email);
-            console.log('인증코드 발송 성공', response);
-            set({ token: response.result.token })
-            return true;
-        } catch (error) {
-            console.log('인증코드 발송 실패', error.response ? error.response.data : error);
-            return false;
-        }
-    },
-
-    verifyEmailAuthCode: async () => {
-        const { email, token, code } = useStore.getState();
-        try {
-            const response = await verifyEmailAuthCode(email, token, code);
-            const isSuccess = response.result.verify;
-            set({ isVerifyEmail: isSuccess });
-            return isSuccess;
-        } catch (error) {
-            console.log('인증실패', error);
-            throw error;
-        }
-    },
-
-    performSignUp: async () => {
-        const { email, password, nickname, setIsValidNickname } = useStore.getState();
-        try {
-            const response = await signUp(email, password, nickname);
-            console.log('회원가입 성공', response);
-            setIsValidNickname(undefined);
-            return true;
-        } catch (error) {
-            console.log('회원가입 실패', error.response ? error.response.data : error);
-            setIsValidNickname(undefined);
-            return false;
-        }
-    },
 
     performLogin: async () => {
         const { email, password } = useStore.getState();
