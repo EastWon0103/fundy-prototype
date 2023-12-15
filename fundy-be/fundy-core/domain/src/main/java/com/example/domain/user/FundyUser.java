@@ -21,4 +21,12 @@ public class FundyUser {
     private String nickname;
     private FundyRole role;
     private List<Account> accounts;
+
+    public boolean isAccountOwner(Account targetAccount) {
+        for(Account account: accounts) {
+            if (account.equals(targetAccount))
+                return true;
+        }
+        return false;
+    }
 }

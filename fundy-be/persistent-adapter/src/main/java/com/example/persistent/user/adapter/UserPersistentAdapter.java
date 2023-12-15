@@ -54,6 +54,28 @@ public class UserPersistentAdapter implements SaveUserPort, FindUserPort, Valida
     }
 
     @Override
+    public Optional<LoadUserInfoResponse> findById(long id) {
+        UserModel userModel = userRepository.findById(id).orElse(null);
+        if (userModel == null)
+            return Optional.empty();
+
+        return Optional.of(LoadUserInfoResponse.builder()
+            .id(userModel.getId())
+            .email(userModel.getEmail())
+            .nickname(userModel.getNickname())
+            .profile(userModel.getProfile())
+            .password(userModel.getPassword())
+            .role(userModel.getRole())
+            .accounts(userModel.getAccounts().stream().map(account -> LoadAccountInfoResponse.builder()
+                    .id(account.getId())
+                    .number(account.getNumber())
+                    .balance(account.getBalance())
+                    .build())
+                .collect(Collectors.toList()))
+            .build());
+    }
+
+    @Override
     public boolean existsByEmailAndNickname(String email, String nickname) {
         return userRepository.existsByEmailOrNickname(email, nickname);
     }
