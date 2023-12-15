@@ -16,20 +16,6 @@ const useStore = create(persist((set) => ({
     setProject: (projectData) => set({ project: projectData }),
     setRewards: (rewardsData) => set({ rewards: rewardsData }),
 
-    performLogin: async () => {
-        const { email, password } = useStore.getState();
-        try {
-            const response = await login(email, password);
-            console.log('로그인 성공', response);
-            set({ isLoggedIn: true, token: response.result.token });
-            await useStore.getState().getUserInfo();
-            return true;
-        } catch (error) {
-            console.log('로그인 실패', error.response ? error.response.data : error);
-            return false;
-        }
-    },
-
     getUserInfo: async () => {
         const { token } = useStore.getState();
         try {
