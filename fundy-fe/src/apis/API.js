@@ -143,8 +143,22 @@ export const getUser = async (token) => {
  * @param {int} pageSize 
  */
 
-
 export const getProjects = async (pageNum, pageSize) => {
+    try {
+        const response = await apiClient.get('/projects', {
+            params: {
+                pageNum,
+                pageSize
+            }
+        })
+        console.log('스크롤 목록 요청 성공', response.data);
+        return response.data;
+        
+    } catch (error) {
+        console.log('스크롤 목록 요청 실패', error);
+        throw error;
+        
+    }
 
 
 }
@@ -262,6 +276,94 @@ export const refunding = async (token, transactionId) => {
     } catch (error) {
         console.log('환불요청실패', error)
         throw error
+        
+    }
+}
+
+/**
+ * 개발 노트 목록 불러오기
+ * @param {int} id 
+ * @returns 
+ */
+
+export const getDevNotes = async (id) => {
+    try {
+        const response = await apiClient.get(`/projects/${id}/devnotes`);
+        console.log('개발노트 목록 요청 성공', response.data);
+        return response.data;
+        
+    } catch(error) {
+        console.log('개발노트 목록 요청 실패', error)
+        throw error
+        
+    }
+
+}
+
+/**
+ * 개발 노트 불러오기
+ * @param {int} projectId 
+ * @param {int} devNoteId 
+ * @returns 
+ */
+
+export const getDevNote = async (projectId, devNoteId) => {
+
+    try {
+        const response = await apiClient.get(`/projects/${projectId}/devnotes/${devNoteId}`);
+        console.log('개발노트 요청 성공', response.data);
+        return response.data;
+        
+    } catch (error) {
+        console.log('개발노트 요청 실패', error)
+        throw error
+        
+    }
+}
+
+/**
+ * 개발노트 댓글 가져오기
+ * @param {int} devNoteId 
+ * @returns 
+ */
+
+export const getDevNoteComments = async (devNoteId) => {
+
+    try {
+        const response = await apiClient.get(`/devnotes/${devNoteId}/comments`);
+        console.log('댓글 불러오기 성공', response.data);
+        return response.data;
+        
+    } catch (error) {
+        console.log('댓글 요청 실패', error);
+        throw error;
+    }
+}
+
+/**
+ * 개발노트 댓글 달기
+ * @param {string} token 
+ * @param {string} content 
+ * @param {int} devNoteId 
+ * @returns 
+ */
+
+export const postDevNoteComment = async (token, content, devNoteId) => {
+    const requestBody = { content }
+    const config = { 
+        headers: {
+            Authorization: `Bearer ${token}`
+        }
+    }
+
+    try {
+        const response = await apiClient.post(`/devnotes/${devNoteId}/comments`, requestBody, config);
+        console.log('코멘트 달기 성공', response.body);
+        return true;
+        
+    } catch (error) {
+        console.log('코멘트 실패', error)
+        throw error;
         
     }
 }

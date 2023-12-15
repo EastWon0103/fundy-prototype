@@ -12,8 +12,7 @@ export default function ProjectTop({project}) {
   const formattedPercentage = project.percentage.toFixed(2);
 
 
-  return (
-    
+  return (    
     <Container>
       <CardSection>
         <CardImage src={project.thumbnail} />
@@ -24,8 +23,6 @@ export default function ProjectTop({project}) {
             <GenreCard>{genre}</GenreCard>
           ))}
         </GenreSection>
-        {console.log(project)
-        }
         <TitleSection>
           <Title>{project.title}</Title>
         </TitleSection>
@@ -53,7 +50,7 @@ export default function ProjectTop({project}) {
             <Percentage>{formattedPercentage}{'%'} 달성</Percentage>
           </TotalFundingPrice>
         </GoalPriceSection>
-        <FundingButton>프로젝트 후원하기</FundingButton>
+        {/* <FundingButton>프로젝트 후원하기</FundingButton> */}
       </DetailSection>
     </Container>
   )
