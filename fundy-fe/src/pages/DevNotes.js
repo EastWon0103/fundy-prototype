@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react'
 import { useParams } from 'react-router'
-import DevNoteCarrousel from '../components/DevNotes/DevNoteCarrousel';
 import { getDevNotes } from '../apis/API';
+import { DevNoteCarrousel } from '../components/DevNotes';
 
 export default function DevNotes() {
     let { id } = useParams();

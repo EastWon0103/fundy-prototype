@@ -1,10 +1,8 @@
 import React, { useEffect, useState } from 'react'
 import { useParams } from 'react-router'
 import styled from 'styled-components';
-import ProjectDescription from '../components/ProjectDetail/ProjectDescription';
-import GoToDevNote from '../components/ProjectDetail/GoToDevNote';
-import ProjectBottom from '../components/ProjectDetail/ProjectBottom';
 import { getProjectsById } from '../apis/API';
+import { ProjectDescription, GoToDevNote, ProjectBottom } from '../components/ProjectDetail';
 
 export default function ProjectDetail() {
     const { id } = useParams();

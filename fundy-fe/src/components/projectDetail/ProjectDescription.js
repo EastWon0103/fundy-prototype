@@ -3,7 +3,7 @@ import styled from 'styled-components'
 import formatDate from '../../utils/formatDate'
 import formatCurrency from '../../utils/formatCurrency';
 
-export default function ProjectTop({project}) {
+export default function ProjectDescription({project}) {
 
   const formattedStartDate = formatDate(project.startDateTime);
   const formattedEndDate = formatDate(project.endDateTime);
