@@ -5,7 +5,7 @@ import PdfContent from './PdfContent'
 import useStore from '../../store/store'
 
 
-export default function ProjectBottom({ project, rewards }) {
+export default function ProjectBottom({ project }) {
 
     const performFunding = useStore(state => state.performFunding);
     // const getFundings = useStore(state => state.getFundings);
@@ -29,7 +29,7 @@ export default function ProjectBottom({ project, rewards }) {
             <PdfContent pdf={project.content} scale={1} width={790} />
         </ProjectContent>
         <RewardBox>
-            {rewards.map((reward) => (
+            {project.rewards.map((reward) => (
                 <RewardCard>
                     <TitleSection>
                         <ImageBox>

@@ -145,7 +145,7 @@ export const getUser = async (token) => {
 
 export const getProjects = async (pageNum, pageSize) => {
     try {
-        const response = await apiClient.get('/projects', {
+        const response = await apiClient.get('/project', {
             params: {
                 pageNum,
                 pageSize
@@ -170,7 +170,7 @@ export const getProjects = async (pageNum, pageSize) => {
 
 export const getProjectsById = async (id) => {
     try {
-        const response = await apiClient.get(`/projects/${id}`);
+        const response = await apiClient.get(`/project/${id}`);
         console.log('프로젝트 요청 성공', response.data)
         
         return response.data
@@ -288,7 +288,7 @@ export const refunding = async (token, transactionId) => {
 
 export const getDevNotes = async (id) => {
     try {
-        const response = await apiClient.get(`/projects/${id}/devnotes`);
+        const response = await apiClient.get(`/project/${id}/devnotes`);
         console.log('개발노트 목록 요청 성공', response.data);
         return response.data;
         
@@ -310,7 +310,7 @@ export const getDevNotes = async (id) => {
 export const getDevNote = async (projectId, devNoteId) => {
 
     try {
-        const response = await apiClient.get(`/projects/${projectId}/devnotes/${devNoteId}`);
+        const response = await apiClient.get(`devnotes/${devNoteId}`);
         console.log('개발노트 요청 성공', response.data);
         return response.data;
         

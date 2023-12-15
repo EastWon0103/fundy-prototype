@@ -1,5 +1,5 @@
 import React from 'react'
-import BannerImage from '../images/banner.png'
+import BannerImage from '../../images/banner.png'
 import Carousel from './Carousel'
 import styled from 'styled-components'
 

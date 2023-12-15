@@ -10,10 +10,8 @@ import useRewards from '../hooks/useRewards';
 export default function ProjectDetail() {
     const { id } = useParams();
     const { project, isLoading } = useProject(id); 
-    const { rewards, isRewardsLoading } = useRewards(id);
 
-
-    if (isLoading || isRewardsLoading) {
+    if (isLoading) {
       return(
         <div>로딩중..</div>
       )
@@ -24,7 +22,7 @@ export default function ProjectDetail() {
   
           <ProjectDescription project={project} />
           <GoToDevNote projectId={id}/>
-          <ProjectBottom rewards={rewards} project={project}/>
+          <ProjectBottom project={project}/>
   
         </Body>
   )
