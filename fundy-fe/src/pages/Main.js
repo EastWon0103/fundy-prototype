@@ -1,6 +1,5 @@
 import React from 'react'
-import MainBanner from '../components/Main/MainBanner'
-import ProjectsRow from '../components/Main/ProjectsRow'
+import { MainBanner, ProjectsRow } from '../components/Main'
 
 export default function Main() {
   return (
