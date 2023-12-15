@@ -3,13 +3,23 @@ import styled from 'styled-components'
 import useStore from '../../store/store'
 import formatCurrency from '../../utils/formatCurrency'
 import { Link as RouterLink } from 'react-router-dom'
-import { refunding } from '../../apis/API'
+import { getFundings, refunding } from '../../apis/API'
 
 export default function Profile() {
 
-    const { user, fundings, token, getUserInfo, getFundings } = useStore();
+    const { user, token, getUserInfo } = useStore();
     const [len, setLen] = useState(0);
     const formattedBalance = formatCurrency(user.accounts[0].balance);
+    const [fundings, setFundings] = useState(null);
+
+    const getFundingList = async () => {
+        try {
+            const response = await getFundings(token);
+            setFundings(response.result);
+        } catch (error) {
+            throw error
+        }
+    }
     
     const handleRefund = async (token, transactionId, event) => {
         event.preventDefault();
@@ -18,7 +28,7 @@ export default function Profile() {
             if (response) {
                 alert('환불요청완료');
                 await getUserInfo();
-                await getFundings();
+                await getFundingList();
 
             }
         } catch (error) {
@@ -27,11 +37,12 @@ export default function Profile() {
     }
 
     useEffect(() => {
+        getFundingList();
         if (fundings) {
             const count = fundings.reduce((acc, reward) => acc + (reward.refund ? 0 : 1), 0);
             setLen(count);
         }
-    }, [fundings]);
+    }, []);
 
 
     return (
