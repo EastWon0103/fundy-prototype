@@ -2,15 +2,16 @@ import React, { useEffect, useState } from 'react'
 import styled from 'styled-components'
 import useStore from '../../store/store'
 import formatCurrency from '../../utils/formatCurrency'
-import { Link as RouterLink } from 'react-router-dom'
+import { Link as RouterLink, useNavigate } from 'react-router-dom'
 import { getFundings, refunding } from '../../apis/API'
 
 export default function Profile() {
 
-    const { user, token, getUserInfo } = useStore();
+    const { user, token, getUserInfo, setToken, setUser, setIsLoggedIn } = useStore();
     const [len, setLen] = useState(0);
     const formattedBalance = formatCurrency(user.accounts[0].balance);
     const [fundings, setFundings] = useState(null);
+    const navigate = useNavigate();
 
     const getFundingList = async () => {
         try {
@@ -19,6 +20,13 @@ export default function Profile() {
         } catch (error) {
             throw error
         }
+    }
+
+    const handleLogOut = () => {
+        setUser({});
+        setToken(null);
+        setIsLoggedIn(false);
+        navigate('/');
     }
     
     const handleRefund = async (token, transactionId, event) => {
@@ -60,6 +68,7 @@ export default function Profile() {
                     <FundingDescriptioin>후원한 프로젝트</FundingDescriptioin>
                 </FundingSection>
                 <BalanceSection>잔고: {formattedBalance}원</BalanceSection>
+                <LogOutButton onClick={handleLogOut}>로그아웃</LogOutButton>
             </ProfileBox>
             <MyGames>
                 <TitleSection>보관함</TitleSection>
@@ -150,7 +159,7 @@ const FundingDescriptioin = styled.span`
 `
 
 const BalanceSection = styled.div`
-margin-top: 10px;
+    margin-top: 10px;
     text-align: center;
 `
 
@@ -225,4 +234,8 @@ const RefundButton = styled.button`
     font-weight: bold;
     font-size: 16px;
     cursor: pointer;
+`
+
+const LogOutButton = styled(RefundButton)`
+    margin-top: 20px;
 `
