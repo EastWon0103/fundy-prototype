@@ -1,5 +1,5 @@
 import React, { useEffect } from 'react'
-import Profile from '../components/Profile';
+import Profile from '../components/MyPage/Profile';
 import useStore from '../store/store';
 import styled from 'styled-components';
 
