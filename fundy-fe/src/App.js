@@ -1,12 +1,8 @@
 import {BrowserRouter, Route, Routes} from 'react-router-dom';
 import './App.css';
-import Login from './pages/Login';
-import SignUp from './pages/SignUp';
-import Main from './pages/Main';
 import Navigator from './components/common/Navigator';
-import MyPage from './pages/MyPage';
-import ProjectDetail from './pages/ProjectDetail';
-import DevNotes from './pages/DevNotes';
+import { DevNotes, Login, Main, MyPage, ProjectDetail, SignUp } from './pages';
+
 
 function App() {
   return (
