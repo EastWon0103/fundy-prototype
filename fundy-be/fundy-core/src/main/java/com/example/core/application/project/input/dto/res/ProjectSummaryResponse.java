@@ -21,4 +21,5 @@ public class ProjectSummaryResponse {
     private double percentage;
     private List<String> genres;
     private String description;
+    private boolean isEnded;
 }

@@ -18,6 +18,7 @@ public class ProjectMapper {
             .ownerId(projectResponse.getOwnerId())
             .thumbnail(projectResponse.getThumbnail())
             .title(projectResponse.getTitle())
+            .depositAccountId(projectResponse.getDepositAccountId())
             .description(projectResponse.getDescription())
             .targetAmount(Money.of(projectResponse.getTargetAmount()))
             .genres(projectResponse.getGenres().stream().map(Genre::nameOf).collect(Collectors.toList()))

@@ -5,8 +5,7 @@ project(':batch-adapter') {
     dependencies {
         implementation project(":fundy-core")
         implementation project(":persistent-adapter")
+        implementation project(":email-adapter")
         implementation 'org.springframework.boot:spring-boot-starter-web'
-        implementation 'org.springframework.boot:spring-boot-starter-batch:2.7.14'
-        implementation 'org.springframework.boot:spring-boot-starter-quartz'
     }
 }

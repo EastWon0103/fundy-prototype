@@ -38,7 +38,7 @@ public class FundingService implements FundingUseCase, FundingAmountConnector, G
     private final AccountConnector accountConnector;
 
     @Override
-    public int findByRewardIds(List<Long> rewardIds) {
+    public int getSumByRewardIds(List<Long> rewardIds) {
         return findFundingPort.findByRewardIdsAndNotRefund(rewardIds).stream().mapToInt(LoadFundingInfoResponse::getAmount).sum();
     }
 
@@ -89,22 +89,32 @@ public class FundingService implements FundingUseCase, FundingAmountConnector, G
         return findFundingPort.findByAccountIds(response.stream()
             .map(AccountConnectorResponse::getId)
             .collect(Collectors.toList()))
-            .stream().map((funding)-> {
-                RewardInfoConnectorResponse rewardInfo = rewardInfoConnector.findById(funding.getRewardId());
+            .stream().map(this::mapToDto)
+            .collect(Collectors.toList());
+    }
 
-                return FundingSummaryResponse.builder()
-                    .fundingTransactionId(funding.getId())
-                    .transactionDateTime(funding.getTransactionDateTime())
-                    .accountId(funding.getAccountId())
-                    .rewardId(funding.getRewardId())
-                    .rewardTitle(rewardInfo.getTitle())
-                    .rewardImage(rewardInfo.getImage())
-                    .rewardItem(rewardInfo.getItem())
-                    .rewardPrice(rewardInfo.getMinimumPrice())
-                    .projectId(rewardInfo.getProjectId())
-                    .amount(funding.getAmount())
-                    .isRefund(funding.isRefund())
-                    .build();
-            }).collect(Collectors.toList());
+    @Override
+    public List<FundingSummaryResponse> findByRewardIds(List<Long> rewardIds) {
+        return findFundingPort.findByRewardIdsAndNotRefund(rewardIds).stream()
+            .map(this::mapToDto)
+            .collect(Collectors.toList());
+    }
+
+    private FundingSummaryResponse mapToDto(LoadFundingInfoResponse funding) {
+        RewardInfoConnectorResponse rewardInfo = rewardInfoConnector.findById(funding.getRewardId());
+
+        return FundingSummaryResponse.builder()
+            .fundingTransactionId(funding.getId())
+            .transactionDateTime(funding.getTransactionDateTime())
+            .accountId(funding.getAccountId())
+            .rewardId(funding.getRewardId())
+            .rewardTitle(rewardInfo.getTitle())
+            .rewardImage(rewardInfo.getImage())
+            .rewardItem(rewardInfo.getItem())
+            .rewardPrice(rewardInfo.getMinimumPrice())
+            .projectId(rewardInfo.getProjectId())
+            .amount(funding.getAmount())
+            .isRefund(funding.isRefund())
+            .build();
     }
 }

@@ -1,15 +1,32 @@
 package com.example.batch;
 
 
+import com.example.core.application.project.input.SetProjectUseCase;
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
 
+@RestController
+@RequestMapping("/batch")
+@RequiredArgsConstructor
+@Slf4j
 public class BatchController {
-    // TODO: 배치 프로그램 사용하지 않고 만들기
-    /**
-     * 0. 임의의 프로젝트 기간 만료 시키기
-     * 1. 기간 완료된 프로젝트면서 자금조달이 되지 않은 프로젝트 가져오기
-     * 2. 프로젝트에 관련된 모든 리워드 뽑기
-     * 3. 리워드에 펀딩이 기록된 것 환불된 거 빼고 모두 찾기
-     * 4. 기록된 펀딩 금액만큼 프로젝트 유저에 deposit
-     * 5. 자금조달 완료 하기
-     * */
+    private final SetProjectUseCase setProjectUseCase;
+    private final BatchJobService batchJobService;
+
+
+    @GetMapping("/execute")
+    public ResponseEntity<String> handle(@RequestParam(name = "id") long id) {
+        if(!setProjectUseCase.setProjectExpired(id))
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+                .body("실행 실패");
+
+        batchJobService.execute();
+        return ResponseEntity.ok("배치 실행");
+    }
 }

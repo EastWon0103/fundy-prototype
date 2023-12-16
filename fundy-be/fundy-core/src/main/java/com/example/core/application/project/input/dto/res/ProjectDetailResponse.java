@@ -28,5 +28,6 @@ public class ProjectDetailResponse {
     private int totalFundingAmount;
     private int targetAmount;
     private double percentage;
+    private boolean isEnded;
     private List<RewardDetailResponse> rewards;
 }
