@@ -78,7 +78,7 @@ export default function SignUpTemplate() {
     const handleCheckNickname = async (e) => {
         e.preventDefault();
         if (!isNicknameValid) {
-            setModalDescription('유효하지 않은 닉네임입니다. 닉네임을 확인해주세요.')
+            setModalDescription('유효하지 않은 닉네임입니다.\n닉네임을 확인해주세요.')
             setModalAction(() => closeModalOnly);
             openModal();
         } else {
@@ -165,28 +165,28 @@ export default function SignUpTemplate() {
     
         // 이메일과 비밀번호, 닉네임 유효성 검사
         if (!isEmailValid) {
-            setModalDescription('유효하지 않은 이메일 주소입니다. 이메일을 확인해주세요.')
+            setModalDescription('유효하지 않은 이메일 주소입니다.\n이메일을 확인해주세요.')
             setModalAction(() => closeModalOnly);
             openModal();
 
         }
     
         if (!isPasswordValid) {
-            setModalDescription('유효하지 않은 비밀번호입니다. 비밀번호를 확인해주세요.')
+            setModalDescription('유효하지 않은 비밀번호입니다.\n비밀번호를 확인해주세요.')
             setModalAction(() => closeModalOnly);
             openModal();
 
         }
 
         if (!isNicknameValid) {
-            setModalDescription('유효하지 않은 닉네임입니다. 닉네임을 확인해주세요.')
+            setModalDescription('유효하지 않은 닉네임입니다.\n닉네임을 확인해주세요.')
             setModalAction(() => closeModalOnly);
             openModal();
 
         }
 
         if (!isVerifyEmail) {
-            setModalDescription('이메일 인증이 완료되지 않았습니다. 이메일 인증을 수행해주세요.')
+            setModalDescription('이메일 인증이 완료되지 않았습니다.\n이메일 인증을 수행해주세요.')
             setModalAction(() => closeModalOnly);
             openModal();
 
@@ -194,7 +194,7 @@ export default function SignUpTemplate() {
     
         // 닉네임 중복 검사 확인
         if (isNicknameDuplicated === null) {
-            setModalDescription('네임 중복체크를 수행해주세요.')
+            setModalDescription('닉네임 중복체크를 수행해주세요.')
             setModalAction(() => closeModalOnly);
             openModal();
 
