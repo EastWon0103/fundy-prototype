@@ -62,4 +62,16 @@ public class ProjectModel {
 
     @Column(name = "TARGET_AMOUNT")
     private int targetAmount;
+
+    @Column(name = "IS_TRANSACTION_END")
+    private boolean isTransactionEnd;
+
+    @Column(name = "DEPOSIT_ACCOUNT_ID")
+    private Long depositAccountId;
+    public void setEndDateTime(LocalDateTime endDateTime) {
+        this.endDateTime = endDateTime;
+    }
+    public void setTransactionEnd(boolean isTransactionEnd) {
+        this.isTransactionEnd = isTransactionEnd;
+    }
 }

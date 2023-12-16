@@ -1,6 +1,7 @@
 package com.example.persistent.project.adapter;
 
 import com.example.core.application.project.output.FindProjectPort;
+import com.example.core.application.project.output.SaveProjectPort;
 import com.example.core.application.project.output.dto.res.LoadProjectInfoResponse;
 import com.example.core.application.project.output.dto.res.LoadProjectPageResponse;
 import com.example.core.application.project.output.dto.res.LoadRewardInfoResponse;
@@ -13,13 +14,14 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
-public class ProjectPersistentAdapter implements FindProjectPort {
+public class ProjectPersistentAdapter implements FindProjectPort, SaveProjectPort {
     private final ProjectRepository projectRepository;
     private final RewardRepository rewardRepository;
 
@@ -39,10 +41,25 @@ public class ProjectPersistentAdapter implements FindProjectPort {
         return LoadProjectPageResponse.of(projectModelPage.hasNext(), projectModelPage.map(this::mapToDto).stream().toList());
     }
 
+    @Override
+    public List<LoadProjectInfoResponse> findByIds(List<Long> projectIds) {
+        return projectRepository.findByIdIn(projectIds).stream()
+            .map(this::mapToDto)
+            .collect(Collectors.toList());
+    }
+
+    @Override
+    public List<LoadProjectInfoResponse> findIsNotTransactionEnded() {
+        return projectRepository.findByIsTransactionEnd(false).stream()
+            .map(this::mapToDto)
+            .collect(Collectors.toList());
+    }
+
     private LoadProjectInfoResponse mapToDto(ProjectModel projectModel) {
         List<RewardModel> rewardModels = rewardRepository.findByProject(projectModel);
 
         return LoadProjectInfoResponse.builder()
+            .depositAccountId(projectModel.getDepositAccountId())
             .id(projectModel.getId())
             .title(projectModel.getTitle())
             .thumbnail(projectModel.getThumbnail())
@@ -63,5 +80,27 @@ public class ProjectPersistentAdapter implements FindProjectPort {
                 .title(rewardModel.getTitle())
                 .build()).collect(Collectors.toList()))
             .build();
+    }
+
+    @Override
+    public boolean updateProjectExpired(long projectId) {
+        ProjectModel projectModel = projectRepository.findById(projectId).orElse(null);
+        if (projectModel==null)
+            return false;
+
+        projectModel.setEndDateTime(LocalDateTime.now().minusMinutes(1));
+        projectRepository.save(projectModel);
+        return true;
+    }
+
+    @Override
+    public boolean updateProjectTransactionEnd(long projectId) {
+        ProjectModel projectModel = projectRepository.findById(projectId).orElse(null);
+        if (projectModel==null)
+            return false;
+
+        projectModel.setTransactionEnd(true);
+        projectRepository.save(projectModel);
+        return true;
     }
 }

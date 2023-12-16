@@ -9,6 +9,7 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Getter
@@ -25,9 +26,14 @@ public class Project {
     private List<Reward> rewards;
     private DevNoteUploadTerm devNoteUploadTerm;
     private ProjectPeriod projectPeriod;
+    private long depositAccountId;
     private long ownerId;
 
     public double calculatePercentage(Money totalMoney) {
         return (double) totalMoney.getAmount() / (double) targetAmount.getAmount() * 100;
+    }
+
+    public boolean isExpired() {
+        return projectPeriod.getEndDateTime().isBefore(LocalDateTime.now());
     }
 }

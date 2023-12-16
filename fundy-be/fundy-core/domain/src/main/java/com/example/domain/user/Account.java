@@ -26,6 +26,11 @@ public class Account {
         return sb.toString();
     }
 
+    public void transferTo(Account account, Money amount) {
+        balance.minus(amount);
+        account.balance.plus(amount);
+    }
+
     public void deposit(Money money) {
         balance.plus(money);
     }

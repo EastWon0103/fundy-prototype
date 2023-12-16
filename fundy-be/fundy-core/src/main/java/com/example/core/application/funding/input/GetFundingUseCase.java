@@ -6,4 +6,5 @@ import java.util.List;
 
 public interface GetFundingUseCase {
     List<FundingSummaryResponse> getFundings(final String email);
+    List<FundingSummaryResponse> findByRewardIds(final List<Long> rewardIds);
 }
