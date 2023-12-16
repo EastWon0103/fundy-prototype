@@ -88,7 +88,7 @@ export default function ProjectDescription({project}) {
           {
             project.ended
             ? <FundingButton disabled>펀딩이 만료되었습니다.</FundingButton>
-            : <FundingButton onClick={handleFundingClick}>프로젝트 후원하기</FundingButton>
+            : <FundingButton onClick={handleFundingClick}>프로젝트 마감{'('}자금조달{')'}</FundingButton>
           }
         </DetailSection>
       </Container>
