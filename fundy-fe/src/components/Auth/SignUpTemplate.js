@@ -4,11 +4,24 @@ import styled from 'styled-components'
 import checkEmailFormat from '../../utils/checkEmailFormat';
 import checkPasswordFormat from '../../utils/checkPasswordFormat';
 import checkNicknameFormat from '../../utils/checkNicknameFormat';
-import {useNavigate} from 'react-router-dom';
 import { checkNickname, getEmailAuthCode, signUp, verifyEmailAuthCode } from '../../apis/API';
+import { Modal } from '../common';
+import useModal from '../../hooks/useModal';
+
 
 export default function SignUpTemplate() {
-    const navigate = useNavigate();
+
+    const {
+        modalOpen,
+        modalDescription,
+        setModalDescription,
+        modalAction,
+        setModalAction,
+        openModal,
+        closeModalOnly,
+        closeModalAndNavigate,
+    } = useModal();
+
 
     // 입력 값 상태
     const [email, setEmail] = useState('');
@@ -65,14 +78,19 @@ export default function SignUpTemplate() {
     const handleCheckNickname = async (e) => {
         e.preventDefault();
         if (!isNicknameValid) {
-            alert('유효하지 않은 닉네임입니다. 닉네임을 확인해주세요.')
-            return;
+            setModalDescription('유효하지 않은 닉네임입니다. 닉네임을 확인해주세요.')
+            setModalAction(() => closeModalOnly);
+            openModal();
         } else {
             await checkNicknameDuplication(nickname);
             if (!isNicknameDuplicated) {
-                alert('사용 가능한 닉네임입니다.');
+                setModalDescription('사용 가능한 닉네임입니다.')
+                setModalAction(() => closeModalOnly);
+                openModal();
             } else {
-                alert('중복된 닉네임입니다.');
+                setModalDescription('중복된 닉네임입니다.')
+                setModalAction(() => closeModalOnly);
+                openModal();
             }
         }
     };
@@ -93,9 +111,13 @@ export default function SignUpTemplate() {
         e.preventDefault();
         const isSuccess = await postEmailAuthCode();
         if(isSuccess) {
-            alert('인증코드 발송 완료')
+            setModalDescription('인증코드 발송 완료.')
+            setModalAction(() => closeModalOnly);
+            openModal();
         } else {
-            alert('인증코드 발송 실패')
+            setModalDescription('인증코드 발송 실패.')
+            setModalAction(() => closeModalOnly);
+            openModal();
         }
     }
 
@@ -105,15 +127,21 @@ export default function SignUpTemplate() {
             const response = await verifyEmailAuthCode(email, token, code)
             if(response.result.verify) {
                 setIsVerifyEmail(true);
-                alert('인증완료')
+                setModalDescription('인증완료.')
+                setModalAction(() => closeModalOnly);
+                openModal();
             } else {
                 setIsVerifyEmail(false);
-                alert('인증 실패');
+                setModalDescription('인증번호를 확인하세요.')
+                setModalAction(() => closeModalOnly);
+                openModal();
             }
 
         } catch (error) {
             console.log('인증 중 오류 발생', error)
-            alert('인증 중 오류 발생')
+            setModalDescription('인증 중 오류 발생.')
+            setModalAction(() => closeModalOnly);
+            openModal();
             throw error;
         }
 
@@ -125,7 +153,9 @@ export default function SignUpTemplate() {
             return true;
         } catch (error) {
             console.log('회원가입 실패', error)
-            alert('회원가입 실패. 다시 시도 해주세요')
+            setModalDescription('회원가입이 실패했습니다.')
+            setModalAction(() => closeModalOnly);
+            openModal();
             return false;
         }
     }
@@ -135,98 +165,121 @@ export default function SignUpTemplate() {
     
         // 이메일과 비밀번호, 닉네임 유효성 검사
         if (!isEmailValid) {
-            alert('유효하지 않은 이메일 주소입니다. 이메일을 확인해주세요.');
-            return;
+            setModalDescription('유효하지 않은 이메일 주소입니다. 이메일을 확인해주세요.')
+            setModalAction(() => closeModalOnly);
+            openModal();
+
         }
     
         if (!isPasswordValid) {
-            alert('유효하지 않은 비밀번호입니다. 비밀번호를 확인해주세요.');
-            return;
+            setModalDescription('유효하지 않은 비밀번호입니다. 비밀번호를 확인해주세요.')
+            setModalAction(() => closeModalOnly);
+            openModal();
+
         }
 
         if (!isNicknameValid) {
-            alert('유효하지 않은 닉네임입니다. 닉네임을 확인해주세요.');
-            return;
+            setModalDescription('유효하지 않은 닉네임입니다. 닉네임을 확인해주세요.')
+            setModalAction(() => closeModalOnly);
+            openModal();
+
         }
 
         if (!isVerifyEmail) {
-            alert('이메일 인증이 완료되지 않았습니다. 이메일 인증을 수행해주세요.');
-            return;
+            setModalDescription('이메일 인증이 완료되지 않았습니다. 이메일 인증을 수행해주세요.')
+            setModalAction(() => closeModalOnly);
+            openModal();
+
         }
     
         // 닉네임 중복 검사 확인
         if (isNicknameDuplicated === null) {
-            alert('닉네임 중복체크를 수행해주세요.');
-            return;
+            setModalDescription('네임 중복체크를 수행해주세요.')
+            setModalAction(() => closeModalOnly);
+            openModal();
+
         } else if (isNicknameDuplicated) {
-            alert('닉네임이 중복입니다.');
-            return;
+            setModalDescription('닉네임이 중복입니다.')
+            setModalAction(() => closeModalOnly);
+            openModal();
+
         }
 
-        // 모든 조건이 충족되면 회원가입 수행
-        const signUpSuccess = await performSignUp();
-        if (signUpSuccess) {
-            navigate('/');
-        }
+        if (isEmailValid && isPasswordValid && isNicknameValid && !isNicknameDuplicated && isVerifyEmail) {
+            const signUpSuccess = await performSignUp();
+            if (signUpSuccess) {
+                setModalDescription('회원가입이 완료되었습니다.')
+                setModalAction(() => () => closeModalAndNavigate('/'))
+                openModal();
+            }
+        } 
+
 
     };
 
     return (
-        <Container>
-          <Title>회원가입을 위해<br />정보를 입력해주세요.</Title>
-          <form onSubmit={handleSignUp}>
-            <Label>
-                * 이메일
-                <EmailContainer>
-                    <EmailInput 
-                        type='email' 
-                        placeholder='ex) fundy@fundy.com' 
-                        value={email} 
-                        onChange={handleEmailChange} 
-                        isValid={isEmailValid}/>
-                    <CheckButton onClick={handleEmailAuthCode}>인증코드발송</CheckButton>
-                </EmailContainer>
-            </Label>
-
-            <Label>
-                * 이메일 인증코드
-                <CodeContainer>
-                    <CodeInput 
-                        type='code' 
-                        placeholder='인증코드 작성' 
-                        value={code} 
-                        onChange={handleCodeChange}
-                        isValid={true}/> 
-                    <CheckButton onClick={handleVerifyEmailAuthCode}>인증하기</CheckButton>
-                </CodeContainer>
-            </Label>
-
+        <div>
+            <Container>
+            <Title>회원가입을 위해<br />정보를 입력해주세요.</Title>
+            <form onSubmit={handleSignUp}>
                 <Label>
-                    * 닉네임
-                    <NicknameContainer>
-                        <NicknameInput
-                            type='nickname'
-                            placeholder='2자 이상'  
-                            value={nickname} 
-                            onChange={handleNicknameChange} 
-                            isValid={isNicknameValid} />
-                        <CheckButton onClick={handleCheckNickname}>중복확인</CheckButton>
-                    </NicknameContainer>
+                    * 이메일
+                    <EmailContainer>
+                        <EmailInput 
+                            type='email' 
+                            placeholder='ex) fundy@fundy.com' 
+                            value={email} 
+                            onChange={handleEmailChange} 
+                            isValid={isEmailValid}/>
+                        <CheckButton onClick={handleEmailAuthCode}>인증코드발송</CheckButton>
+                    </EmailContainer>
                 </Label>
 
-            <Label>
-                * 비밀번호
-                <Input
-                    type='password' 
-                    placeholder='10자 이상, 대소문자, 숫자, 특수문자 하나 이상 포함'
-                    value={password} 
-                    onChange={handlePasswordChange} 
-                    isValid={isPasswordValid} />
-            </Label>
-                <InputCheckbox type="checkbox" className="agree" /> 이용약관 개인정보 수집 및 정보이용에 동의합니다.
-            <SignUpButton type='submit'>가입하기</SignUpButton>
-          </form>
-        </Container>
+                <Label>
+                    * 이메일 인증코드
+                    <CodeContainer>
+                        <CodeInput 
+                            type='code' 
+                            placeholder='인증코드 작성' 
+                            value={code} 
+                            onChange={handleCodeChange}
+                            isValid={true}/> 
+                        <CheckButton onClick={handleVerifyEmailAuthCode}>인증하기</CheckButton>
+                    </CodeContainer>
+                </Label>
+
+                    <Label>
+                        * 닉네임
+                        <NicknameContainer>
+                            <NicknameInput
+                                type='nickname'
+                                placeholder='2자 이상'  
+                                value={nickname} 
+                                onChange={handleNicknameChange} 
+                                isValid={isNicknameValid} />
+                            <CheckButton onClick={handleCheckNickname}>중복확인</CheckButton>
+                        </NicknameContainer>
+                    </Label>
+
+                <Label>
+                    * 비밀번호
+                    <Input
+                        type='password' 
+                        placeholder='10자 이상, 대소문자, 숫자, 특수문자 하나 이상 포함'
+                        value={password} 
+                        onChange={handlePasswordChange} 
+                        isValid={isPasswordValid} />
+                </Label>
+                    <InputCheckbox type="checkbox" className="agree" /> 이용약관 개인정보 수집 및 정보이용에 동의합니다.
+                <SignUpButton type='submit'>가입하기</SignUpButton>
+            </form>
+            </Container>
+            <Modal 
+                isOpen={modalOpen} 
+                action={modalAction} 
+                description={modalDescription} />
+
+        </div>
       );
     };
 
