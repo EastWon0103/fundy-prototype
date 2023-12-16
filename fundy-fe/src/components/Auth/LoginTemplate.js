@@ -3,8 +3,18 @@ import styled from 'styled-components';
 import useStore from '../../store/store';
 import { useNavigate } from 'react-router';
 import { login } from '../../apis/API';
+import useModal from '../../hooks/useModal';
+import { Modal } from '../common';
 
 export default function LoginTemplate() {
+
+  const {       
+    modalOpen,
+    modalDescription,
+    setModalDescription,
+    modalAction,
+    openModal,
+    } = useModal();
 
   const { setToken, setIsLoggedIn, getUserInfo } = useStore();
   const [email, setEmail] = useState('');
@@ -42,35 +52,42 @@ export default function LoginTemplate() {
       await getUserInfo();
       navigate('/');
     } else {
-      alert('로그인에 실패 했습니다. 이메일과 비밀번호를 확인해주세요.')
+      setModalDescription(`로그인에 실패하였습니다.\n아이디와 비밀번호를 확인해주세요.`)
+      openModal();
       return;
     }
   }
 
   return (
-    <Container>
-      <Title>로그인</Title>
-      <form onSubmit={handleLogin}>
-        <Label>
-            * 이메일
-            <Input 
-                type='email' 
-                placeholder='이메일 입력' 
-                value={email}
-                onChange={handleEmailChange} />
-        </Label>
+    <div>
+      <Container>
+        <Title>로그인</Title>
+        <form onSubmit={handleLogin}>
+          <Label>
+              * 이메일
+              <Input 
+                  type='email' 
+                  placeholder='이메일 입력' 
+                  value={email}
+                  onChange={handleEmailChange} />
+          </Label>
 
-        <Label>
-            * 비밀번호
-            <Input
-                type='password' 
-                placeholder='비밀번호 입력'
-                value={password}
-                onChange={handlePasswordChange} />
-        </Label>
-        <SignUpButton type='submit'>로그인</SignUpButton>
-      </form>
-    </Container>
+          <Label>
+              * 비밀번호
+              <Input
+                  type='password' 
+                  placeholder='비밀번호 입력'
+                  value={password}
+                  onChange={handlePasswordChange} />
+          </Label>
+          <SignUpButton type='submit'>로그인</SignUpButton>
+        </form>
+      </Container>
+      <Modal
+        isOpen={modalOpen}
+        action={modalAction}
+        description={modalDescription} />
+    </div>
   );
 };
 

@@ -4,10 +4,19 @@ import useStore from '../../store/store'
 import formatCurrency from '../../utils/formatCurrency'
 import { Link as RouterLink, useNavigate } from 'react-router-dom'
 import { getFundings, refunding } from '../../apis/API'
+import { Modal } from '../common'
+import useModal from '../../hooks/useModal'
 
 export default function Profile() {
 
     const { user, token, getUserInfo, setToken, setUser, setIsLoggedIn } = useStore();
+    const {       
+        modalOpen,
+        modalDescription,
+        setModalDescription,
+        modalAction,
+        openModal,
+        } = useModal();
     const [len, setLen] = useState(0);
     const formattedBalance = formatCurrency(user.accounts[0].balance);
     const [fundings, setFundings] = useState(null);
@@ -34,7 +43,8 @@ export default function Profile() {
         try {
             const response = await(refunding(token, transactionId));
             if (response) {
-                alert('환불요청완료');
+                setModalDescription('환불 요청이 완료되었습니다.')
+                openModal();
                 await getUserInfo();
                 await getFundingList();
 
@@ -54,46 +64,52 @@ export default function Profile() {
 
 
     return (
+        <div>
 
-        <Container>
-            <ProfileBox>
-                <ProfileImageBox>
-                    <ProfileImage src={user.profile}/>
-                </ProfileImageBox>
-                <Nickname>{ user.nickname }</Nickname>
-                <FundingSection>
-                    <FundingAmount>
-                        {fundings === null ? 0 : len}개
-                    </FundingAmount>
-                    <FundingDescriptioin>후원한 프로젝트</FundingDescriptioin>
-                </FundingSection>
-                <BalanceSection>잔고: {formattedBalance}원</BalanceSection>
-                <LogOutButton onClick={handleLogOut}>로그아웃</LogOutButton>
-            </ProfileBox>
-            <MyGames>
-                <TitleSection>보관함</TitleSection>
-                <RewardsSection>
-                    {fundings === null ? null : fundings.map((reward) => (
-                        <Link to={`/project/${reward.projectId}`}>
-                            <RewardsCard>
-                                <RewardsImage src={reward.rewardImage}/>
-                                <RewardsTitle>{reward.rewardTitle}</RewardsTitle>
-                                { 
-                                    reward.refund ? 
-                                    <RewardsAmount>환불완료</RewardsAmount> :
-                                    <> 
-                                        <RewardsAmount>{formatCurrency(reward.amount)} 원</RewardsAmount>
-                                        <RefundButton onClick={(event) => {
-                                            handleRefund(token, reward.fundingTransactionId, event)
-                                            }}>환불하기</RefundButton>
-                                    </>
-                                }
-                            </RewardsCard>
-                        </Link>
-                    ))}
-                </RewardsSection>
-            </MyGames>
-        </Container>
+            <Container>
+                <ProfileBox>
+                    <ProfileImageBox>
+                        <ProfileImage src={user.profile}/>
+                    </ProfileImageBox>
+                    <Nickname>{ user.nickname }</Nickname>
+                    <FundingSection>
+                        <FundingAmount>
+                            {fundings === null ? 0 : len}개
+                        </FundingAmount>
+                        <FundingDescriptioin>후원한 프로젝트</FundingDescriptioin>
+                    </FundingSection>
+                    <BalanceSection>잔고: {formattedBalance}원</BalanceSection>
+                    <LogOutButton onClick={handleLogOut}>로그아웃</LogOutButton>
+                </ProfileBox>
+                <MyGames>
+                    <TitleSection>보관함</TitleSection>
+                    <RewardsSection>
+                        {fundings === null ? null : fundings.map((reward) => (
+                            <Link to={`/project/${reward.projectId}`}>
+                                <RewardsCard>
+                                    <RewardsImage src={reward.rewardImage}/>
+                                    <RewardsTitle>{reward.rewardTitle}</RewardsTitle>
+                                    { 
+                                        reward.refund ? 
+                                        <RewardsAmount>환불완료</RewardsAmount> :
+                                        <> 
+                                            <RewardsAmount>{formatCurrency(reward.amount)} 원</RewardsAmount>
+                                            <RefundButton onClick={(event) => {
+                                                handleRefund(token, reward.fundingTransactionId, event)
+                                                }}>환불하기</RefundButton>
+                                        </>
+                                    }
+                                </RewardsCard>
+                            </Link>
+                        ))}
+                    </RewardsSection>
+                </MyGames>
+            </Container>
+            <Modal
+                isOpen={modalOpen}
+                action={modalAction}
+                description={modalDescription} />
+        </div>
 
     )
 

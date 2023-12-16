@@ -4,10 +4,22 @@ import formatCurrency from '../../utils/formatCurrency'
 import PdfContent from './PdfContent'
 import useStore from '../../store/store'
 import { funding } from '../../apis/API'
+import { Modal } from '../common'
+import useModal from '../../hooks/useModal'
 
 
 export default function ProjectBottom({ project }) {
     const { user, token } = useStore();
+    const {       
+        modalOpen,
+        modalDescription,
+        setModalDescription,
+        modalAction,
+        setModalAction,
+        openModal,
+        closeModalAndRefresh,
+        } = useModal();
+    
 
     const performFunding = async (rewardId, amount) => {
         if (user.accounts[0].balance >= amount) {
@@ -30,10 +42,12 @@ export default function ProjectBottom({ project }) {
         try {
             const isSuccess = await performFunding(rewardId, amount);
             if(isSuccess) {
-                alert('후원성공');
-                window.location.reload();
+                setModalDescription(`후원에 성공하였습니다!`)
+                setModalAction(() => closeModalAndRefresh)
+                openModal();
             } else {
-                alert('잔고 부족')
+                setModalDescription(`잔고가 부족합니다.`)
+                openModal();
             }
         } catch (error) {
             console.log('에러', error)
@@ -42,34 +56,40 @@ export default function ProjectBottom({ project }) {
 
 
   return (
-    <Container>
-        <ProjectContent>
-            <PdfContent pdf={project.content} scale={1} width={790} />
-        </ProjectContent>
-        <RewardBox>
-            {project.rewards.map((reward) => (
-                <RewardCard>
-                    <TitleSection>
-                        <ImageBox>
-                            <Image src={reward.image} />
-                        </ImageBox>
-                        <RewardTitleBox>
-                            <RewardTitle>{reward.title}</RewardTitle>
-                            <RewardAmount>{formatCurrency(reward.minimumPrice)}<Currency> 원</Currency></RewardAmount>
-                        </RewardTitleBox>
-                    </TitleSection>
-                    <RewardItemList>
-                        <RewardItem>{reward.item}</RewardItem>
-                        <RewardItem>{reward.item}</RewardItem>
-                        <RewardItem>{reward.item}</RewardItem>
-                    </RewardItemList>
-                    <FundingButton onClick={() => handleFundingClick(reward.id, reward.minimumPrice)}>{formatCurrency(reward.minimumPrice)}원 후원하기</FundingButton>
-                </RewardCard>
-            ))}
+    <div>
+        <Container>
+            <ProjectContent>
+                <PdfContent pdf={project.content} scale={1} width={790} />
+            </ProjectContent>
+            <RewardBox>
+                {project.rewards.map((reward) => (
+                    <RewardCard>
+                        <TitleSection>
+                            <ImageBox>
+                                <Image src={reward.image} />
+                            </ImageBox>
+                            <RewardTitleBox>
+                                <RewardTitle>{reward.title}</RewardTitle>
+                                <RewardAmount>{formatCurrency(reward.minimumPrice)}<Currency> 원</Currency></RewardAmount>
+                            </RewardTitleBox>
+                        </TitleSection>
+                        <RewardItemList>
+                            <RewardItem>{reward.item}</RewardItem>
+                            <RewardItem>{reward.item}</RewardItem>
+                            <RewardItem>{reward.item}</RewardItem>
+                        </RewardItemList>
+                        <FundingButton onClick={() => handleFundingClick(reward.id, reward.minimumPrice)}>{formatCurrency(reward.minimumPrice)}원 후원하기</FundingButton>
+                    </RewardCard>
+                ))}
 
-        </RewardBox>
+            </RewardBox>
 
-    </Container>
+        </Container>
+        <Modal
+            isOpen={modalOpen}
+            action={modalAction}
+            description={modalDescription} />
+    </div>
   )
 }
 
