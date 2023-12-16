@@ -87,8 +87,15 @@ public class UserService implements AuthUseCase, GetUserInfoUseCase,
 
     @Override
     public UserInfoResponse getUserInfoByEmail(String email) {
-        FundyUser fundyUser = findByEmail(email);
+        return toUserInfoResponse(findByEmail(email));
+    }
 
+    @Override
+    public UserInfoResponse getUserInfoById(Long id) {
+        return toUserInfoResponse(findById(id));
+    }
+
+    private UserInfoResponse toUserInfoResponse(FundyUser fundyUser) {
         return UserInfoResponse.builder()
             .profile(fundyUser.getProfile())
             .nickname(fundyUser.getNickname())
@@ -134,8 +141,12 @@ public class UserService implements AuthUseCase, GetUserInfoUseCase,
 
     @Override
     public UserInfoConnectorResponse searchUserById(long id) {
-        return fromDomain(UserAccountMapper.toDomainFrom(findUserPort.findById(id).orElseThrow(()
-            -> CoreExceptionFactory.createBasic(CoreExceptionType.NO_USER))));
+        return fromDomain(findById(id));
+    }
+
+    private FundyUser findById(long id) {
+        return UserAccountMapper.toDomainFrom(findUserPort.findById(id).orElseThrow(()
+            -> CoreExceptionFactory.createBasic(CoreExceptionType.NO_USER)));
     }
 
     @Override

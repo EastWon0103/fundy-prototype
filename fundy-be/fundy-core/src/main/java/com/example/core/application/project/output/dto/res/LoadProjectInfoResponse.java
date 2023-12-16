@@ -27,4 +27,5 @@ public class LoadProjectInfoResponse {
     private long ownerId;
     private int targetAmount;
     private List<LoadRewardInfoResponse> rewards;
+    private long depositAccountId;
 }
