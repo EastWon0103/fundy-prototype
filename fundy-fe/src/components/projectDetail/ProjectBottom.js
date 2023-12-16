@@ -29,7 +29,6 @@ export default function ProjectBottom({ project }) {
             } catch (error) {
                 console.log('후원 에러', error);
                 throw error;
-                
             }
         } else {
             console.log('잔고 부족');
@@ -78,7 +77,11 @@ export default function ProjectBottom({ project }) {
                             <RewardItem>{reward.item}</RewardItem>
                             <RewardItem>{reward.item}</RewardItem>
                         </RewardItemList>
-                        <FundingButton onClick={() => handleFundingClick(reward.id, reward.minimumPrice)}>{formatCurrency(reward.minimumPrice)}원 후원하기</FundingButton>
+                        {
+                            project.ended
+                            ? <FundingButton disabled>펀딩이 만료되었습니다.</FundingButton>
+                            : <FundingButton onClick={() => handleFundingClick(reward.id, reward.minimumPrice)}>{formatCurrency(reward.minimumPrice)}원 후원하기</FundingButton>
+                        }
                     </RewardCard>
                 ))}
 
@@ -183,10 +186,10 @@ const FundingButton = styled.button`
   width: 400px;
   height: 50px;
   color: #FFFFFF;
-  background-color: #675bfe;
-  border: #685bfe solid 1px;
+  background-color: ${props => props.disabled ? '#ccc' : '#675bfe'};
+  border: ${props => props.disabled ? '#ccc solid 1px' : '#685bfe solid 1px'};
+  cursor: ${props => props.disabled ? 'default' : 'pointer'};
   font-weight: bold;
   font-size: 16px;
-  cursor: pointer;
 
 `

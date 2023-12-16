@@ -73,7 +73,7 @@ export default function ProjectsRow() {
                                 <ProjectTitle>{project.title}</ProjectTitle>
                             </ProjectTitleBox>
                             <DescriptionBox>
-                                카드오브던전클래식은 머시깽이하고 머시깽이하는 머시깽이입니당.
+                                {project.description}
                             </DescriptionBox>
                             <AmountBox>
                                 <AmountPercentage>{project.percentage.toFixed(2)}{'%'} 달성</AmountPercentage>

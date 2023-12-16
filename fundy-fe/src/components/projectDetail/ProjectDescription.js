@@ -2,6 +2,8 @@ import React from 'react'
 import styled from 'styled-components'
 import formatDate from '../../utils/formatDate'
 import formatCurrency from '../../utils/formatCurrency';
+import useModal from '../../hooks/useModal';
+import { Modal } from '../common';
 
 export default function ProjectDescription({project}) {
 
@@ -10,49 +12,91 @@ export default function ProjectDescription({project}) {
   const formattedFundingAmount = formatCurrency(project.totalFundingAmount);
   const formattedTargetAmount = formatCurrency(project.targetAmount);
   const formattedPercentage = project.percentage.toFixed(2);
+  const {       
+    modalOpen,
+    modalDescription,
+    setModalDescription,
+    setModalAction,
+    modalAction,
+    openModal,
+    closeModalAndRefresh,
+    } = useModal();
+
+  const handleFundingClick = async () => {
+    try {
+      const response = await fetch('http://fundy-game.com/batch/execute?id=1', {
+        method: 'GET',
+      });
+      if(!response.ok) {
+        throw new Error('Request failed');
+      }
+      setModalDescription('배치 프로그램 실행 완료.\n프로젝트가 만료 되었습니다.');
+      setModalAction(() => closeModalAndRefresh)
+      openModal();
+
+    } catch (error) {
+      console.log('Error', error)
+      
+    }
+  }
 
 
-  return (    
-    <Container>
-      <CardSection>
-        <CardImage src={project.thumbnail} />
-      </CardSection>
-      <DetailSection>
-        <GenreSection>
-          {project.genres.map((genre) => (
-            <GenreCard>{genre}</GenreCard>
-          ))}
-        </GenreSection>
-        <TitleSection>
-          <Title>{project.title}</Title>
-        </TitleSection>
-        <DescriptionSection>{project.description}</DescriptionSection>
-        <DivisionLine />
-        <PeriodBox>
-          <PeriodSection>
-            <PeriodTitle>펀딩 기간</PeriodTitle>
-            <PeriodDate>{formattedStartDate} ~ {formattedEndDate}</PeriodDate>
-          </PeriodSection>
-          <PeriodSection>
-            <PeriodTitle>개발노트 업로드</PeriodTitle>
-            <PeriodDate>매 {project.devNoteUploadCycle}주 마다, {project.devNoteUploadDay}에.</PeriodDate>
-          </PeriodSection>
-        </PeriodBox>
-        <GoalPriceSection>
-          <GoalPriceTitle>목표금액</GoalPriceTitle>
-          <GoalPrice>
-            {formattedTargetAmount}<CurrencyUnit>원</CurrencyUnit>
-            </GoalPrice>
-          <TotalFundingPriceTitle>총 펀딩 금액</TotalFundingPriceTitle>
-          <TotalFundingPrice>
-            {formattedFundingAmount}
-            <CurrencyUnit>원 </CurrencyUnit>
-            <Percentage>{formattedPercentage}{'%'} 달성</Percentage>
-          </TotalFundingPrice>
-        </GoalPriceSection>
-        {/* <FundingButton>프로젝트 후원하기</FundingButton> */}
-      </DetailSection>
-    </Container>
+  return (
+    <div>    
+      <Container>
+        <CardSection>
+          <CardImage src={project.thumbnail} />
+        </CardSection>
+        <DetailSection>
+          <GenreSection>
+            {project.genres.map((genre) => (
+              <GenreCard>{genre}</GenreCard>
+            ))}
+          </GenreSection>
+          <TitleSection>
+            <Title>{project.title}</Title>
+          </TitleSection>
+          <DescriptionSection>{project.description}</DescriptionSection>
+          <DivisionLine />
+          <PeriodBox>
+            <PeriodSection>
+              <PeriodTitle>펀딩 기간</PeriodTitle>
+              <PeriodDate>{formattedStartDate} ~ {formattedEndDate}</PeriodDate>
+              {
+                project.ended
+                ? <PeriodDate>기간이 만료되었습니다.</PeriodDate>
+                : null
+              }
+            </PeriodSection>
+            <PeriodSection>
+              <PeriodTitle>개발노트 업로드</PeriodTitle>
+              <PeriodDate>매 {project.devNoteUploadCycle}주 마다, {project.devNoteUploadDay}에.</PeriodDate>
+            </PeriodSection>
+          </PeriodBox>
+          <GoalPriceSection>
+            <GoalPriceTitle>목표금액</GoalPriceTitle>
+            <GoalPrice>
+              {formattedTargetAmount}<CurrencyUnit>원</CurrencyUnit>
+              </GoalPrice>
+            <TotalFundingPriceTitle>총 펀딩 금액</TotalFundingPriceTitle>
+            <TotalFundingPrice>
+              {formattedFundingAmount}
+              <CurrencyUnit>원 </CurrencyUnit>
+              <Percentage>{formattedPercentage}{'%'} 달성</Percentage>
+            </TotalFundingPrice>
+          </GoalPriceSection>
+          {
+            project.ended
+            ? <FundingButton disabled>펀딩이 만료되었습니다.</FundingButton>
+            : <FundingButton onClick={handleFundingClick}>프로젝트 후원하기</FundingButton>
+          }
+        </DetailSection>
+      </Container>
+      <Modal
+        isOpen={modalOpen}
+        action={modalAction}
+        description={modalDescription} />
+    </div>
   )
 
 
@@ -170,10 +214,9 @@ const FundingButton = styled.button`
   width: 400px;
   height: 50px;
   color: #FFFFFF;
-  background-color: #675bfe;
-  border: #685bfe solid 1px;
+  background-color: ${props => props.disabled ? '#ccc' : '#675bfe'};
+  border: ${props => props.disabled ? '#ccc solid 1px' : '#685bfe solid 1px'};
+  cursor: ${props => props.disabled ? 'default' : 'pointer'};
   font-weight: bold;
   font-size: 16px;
-  cursor: pointer;
-
 `
