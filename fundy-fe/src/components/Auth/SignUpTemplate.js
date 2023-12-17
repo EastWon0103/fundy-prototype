@@ -69,6 +69,7 @@ export default function SignUpTemplate() {
         try {
             const response = await checkNickname(nickname);
             setIsNicknameDuplicated(response.result.duplicate);
+            return response.result.duplicate;
         } catch (error) {
             console.log('닉네임 중복검사 중 오류 발생', error);
             setIsNicknameDuplicated(null);
@@ -82,8 +83,9 @@ export default function SignUpTemplate() {
             setModalAction(() => closeModalOnly);
             openModal();
         } else {
-            await checkNicknameDuplication(nickname);
-            if (!isNicknameDuplicated) {
+            const isDuplicated = await checkNicknameDuplication(nickname);
+            setIsNicknameDuplicated(isDuplicated)
+            if (!isDuplicated) {
                 setModalDescription('사용 가능한 닉네임입니다.')
                 setModalAction(() => closeModalOnly);
                 openModal();
