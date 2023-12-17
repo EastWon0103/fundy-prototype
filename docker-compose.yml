@@ -11,9 +11,6 @@ services:
       - ./fundy-be/gradlew:/gradlew
       - ./fundy-be/gradle:/gradle
       - ./fundy-be/settings.gradle:/settings.gradle
-      - ./fundy-be/fundy-api:/fundy-api
-      - ./fundy-be/fundy-domain:/fundy-domain
-      - ./fundy-be/fundy-batch:/fundy-batch
       - ./fundy-be/fundy-core:/fundy-core
       - ./fundy-be/api-adapter:/api-adapter
       - ./fundy-be/persistent-adapter:/persistent-adapter

@@ -23,7 +23,7 @@ import java.util.stream.Collectors;
 @Service
 @RequiredArgsConstructor
 @Transactional(readOnly = true)
-public class DevNoteCommentServiceComment implements SaveDevNoteCommentUseCase, GetDevNoteCommentUseCase {
+public class DevNoteCommentService implements SaveDevNoteCommentUseCase, GetDevNoteCommentUseCase {
     private final FindDevNoteCommentPort findDevNoteCommentPort;
     private final FindDevNotePort findDevNotePort;
     private final SaveDevNoteCommentPort saveDevNoteCommentPort;

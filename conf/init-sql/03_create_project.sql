@@ -8,7 +8,7 @@ create table project
     owner_id             bigint       not null,
     start_datetime       datetime(6)  not null,
     content              varchar(255) not null,
-    description          varchar(255) not null,
+    description          varchar(1000) not null,
     devnote_upload_day   varchar(255) not null,
     title                varchar(255) not null,
     thumbnail                varchar(255) not null,

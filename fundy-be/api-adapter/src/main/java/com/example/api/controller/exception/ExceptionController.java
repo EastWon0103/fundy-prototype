@@ -17,6 +17,12 @@ import java.util.stream.Collectors;
 @Hidden
 @Slf4j
 public class ExceptionController {
+    @ExceptionHandler({CoreApplicationException.class})
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    public final GlobalExceptionResponse handleCoreApplicationException(final CoreApplicationException e) {
+        return makeResponse(e.getMessage());
+    }
+
     @ExceptionHandler({MethodArgumentNotValidException.class})
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     public final GlobalExceptionResponse handleMethodArgumentNotValidException(final MethodArgumentNotValidException e) {
@@ -25,12 +31,6 @@ public class ExceptionController {
             .getFieldErrors()
             .stream().map((error)-> error.getDefaultMessage())
             .collect(Collectors.toList()));
-    }
-
-    @ExceptionHandler({CoreApplicationException.class})
-    @ResponseStatus(HttpStatus.BAD_REQUEST)
-    public final GlobalExceptionResponse handleCoreApplicationException(final CoreApplicationException e) {
-        return makeResponse(e.getMessage());
     }
 
     private GlobalExceptionResponse<String> makeResponse(String message) {
