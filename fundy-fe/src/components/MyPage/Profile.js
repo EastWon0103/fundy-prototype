@@ -22,20 +22,19 @@ export default function Profile() {
     const [fundings, setFundings] = useState(null);
     const navigate = useNavigate();
 
-    const getFundingList = async () => {
-        try {
-            const response = await getFundings(token);
-            setFundings(response.result);
-        } catch (error) {
-            throw error
-        }
-    }
-
     const handleLogOut = () => {
         setUser({});
         setToken(null);
         setIsLoggedIn(false);
         navigate('/');
+    }
+
+    const fetchData = async () => {
+        await getUserInfo();
+        const response = await getFundings(token);
+        setFundings(response.result);
+        const nonRefundedCount = response.result.filter(item => !item.refund).length;
+        setLen(nonRefundedCount);
     }
     
     const handleRefund = async (token, transactionId, event) => {
@@ -45,9 +44,7 @@ export default function Profile() {
             if (response) {
                 setModalDescription('환불 요청이 완료되었습니다.')
                 openModal();
-                await getUserInfo();
-                await getFundingList();
-
+                fetchData();
             }
         } catch (error) {
             alert(error);
@@ -55,11 +52,7 @@ export default function Profile() {
     }
 
     useEffect(() => {
-        getFundingList();
-        if (fundings) {
-            const count = fundings.reduce((acc, reward) => acc + (reward.refund ? 0 : 1), 0);
-            setLen(count);
-        }
+        fetchData(); 
     }, []);
 
 
@@ -74,7 +67,7 @@ export default function Profile() {
                     <Nickname>{ user.nickname }</Nickname>
                     <FundingSection>
                         <FundingAmount>
-                            {fundings === null ? 0 : len}개
+                            {len}개
                         </FundingAmount>
                         <FundingDescriptioin>후원한 프로젝트</FundingDescriptioin>
                     </FundingSection>
