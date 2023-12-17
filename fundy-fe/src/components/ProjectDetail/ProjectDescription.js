@@ -106,7 +106,7 @@ const Container = styled.div`
   text-align: left;
   display: flex;
   margin: 0px auto;
-  height: 880px;
+  height: 1080px;
   width: 96%;
   justify-content: space-around;
   align-items: center;
@@ -144,7 +144,7 @@ const TitleSection = styled.div`
 `
 const Title = styled.h1`
   margin: 0;
-  font-size: 48px;
+  font-size: 28px;
 `
 const DescriptionSection = styled.div`
   padding-top: 10px;

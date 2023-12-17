@@ -4,26 +4,13 @@ import styled from 'styled-components'
 import { getProjects } from '../../apis/API';
 import InfiniteScroll from 'react-infinite-scroll-component';
 import formatCurrency from '../../utils/formatCurrency';
+import truncate from '../../utils/truncate';
 
 export default function ProjectsRow() {
     const [projects, setProjects] = useState([]);
     const [page, setPage] = useState(0);
     const [hasMore, setHasMore] = useState(true);
-
-
-    // 목업데이터
-    // const createMockProjects = (pageNum, pageSize) => {
-    //     return Array.from({ length: pageSize }, (_, index) => ({
-    //         id: (pageNum - 1) * pageSize + index + 1,
-    //         thumbnail: "https://fundy-bucket.s3.ap-northeast-2.amazonaws.com/default/profileImage.png",
-    //         title: `프로젝트 ${pageNum}-${index + 1}`,
-    //         totalFundingAmount: 10000 * (index + 1),
-    //         targetAmount: 500000,
-    //         percentage: ((10000 * (index + 1)) / 500000) * 100,
-    //     }));
-    // };
-
-
+    
     const loadProjects = async () => {
         try {
             const pageSize = 8;
@@ -31,10 +18,6 @@ export default function ProjectsRow() {
             setProjects(prevProjects => [...prevProjects, ...response.result.projectSummarys])
             setHasMore(response.result.hasNext);
             setPage(prevPage => prevPage + 1);
-            // 목업데이터
-            // const mockData = createMockProjects(page, pageSize);
-            // setProjects(prevProjects => [...prevProjects, ...mockData]);
-            // setPage(prevPage => prevPage + 1);
         } catch (error) {
             console.log('프로젝트 로드 실패', error);
             
@@ -73,7 +56,7 @@ export default function ProjectsRow() {
                                 <ProjectTitle>{project.title}</ProjectTitle>
                             </ProjectTitleBox>
                             <DescriptionBox>
-                                {project.description}
+                                {truncate(project.description, 50)}
                             </DescriptionBox>
                             <AmountBox>
                                 <AmountPercentage>{project.percentage.toFixed(2)}{'%'} 달성</AmountPercentage>
@@ -151,7 +134,7 @@ const ProjectTitle = styled.span`
 `
 
 const DescriptionBox = styled.div`
-    margin-top: 5px;
+    margin-top: 30px;
     height: 37px;
     color: rgba(51, 51, 51, 0.60);
     font-size: 12px;
