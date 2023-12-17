@@ -85,6 +85,7 @@ public class ProjectService implements GetProjectInfoUseCase, SetProjectUseCase 
             .description(project.getDescription())
             .startDateTime(project.getProjectPeriod().getStartDateTime())
             .endDateTime(project.getProjectPeriod().getEndDateTime())
+            .devNoteUploadCycle(project.getDevNoteUploadTerm().getWeekCycle())
             .devNoteUploadDay(project.getDevNoteUploadTerm().getDay().getValue())
             .thumbnail(project.getThumbnail())
             .isEnded(project.isExpired())
